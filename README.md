@@ -8,10 +8,17 @@ In order to get set up using this, you'll need to first install Ruby. Once that'
 ```
 bundle
 ```
+
 Now you should be able to simply build/serve this website from the source by issuing the following command:
 
 ```
 bundle exec jekyll serve
+```
+
+If you'd like to just build and not serve, use the following command
+
+```
+bundle exec jekyll build
 ```
 
 ## Webrick Not Found

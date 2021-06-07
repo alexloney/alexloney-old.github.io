@@ -1,27 +1,34 @@
-# Minimal Mistakes remote theme starter
+# My Website
 
-Click [**Use this template**](https://github.com/mmistakes/mm-github-pages-starter/generate) button above for the quickest method of getting started with the [Minimal Mistakes Jekyll theme](https://github.com/mmistakes/minimal-mistakes).
+This website is based off of the [Minimal Mistakes Jekyll theme](https://github.com/mmistakes/minimal-mistakes) by utilizing the "mm-github-pages-starter" page. So if you're reading this and you'd like to copy this template, there ya go!
 
-Contains basic configuration to get you a site with:
+# Getting Set Up
+In order to get set up using this, you'll need to first install Ruby. Once that's installed, clone this repo and execute the following command:
 
-- Sample posts.
-- Sample top navigation.
-- Sample author sidebar with social links.
-- Sample footer links.
-- Paginated home page.
-- Archive pages for posts grouped by year, category, and tag.
-- Sample about page.
-- Sample 404 page.
-- Site wide search.
+```
+bundle
+```
 
-Replace sample content with your own and [configure as necessary](https://mmistakes.github.io/minimal-mistakes/docs/configuration/).
+Now you should be able to simply build/serve this website from the source by issuing the following command:
 
----
+```
+bundle exec jekyll serve
+```
 
-## Troubleshooting
+If you'd like to just build and not serve, use the following command
 
-If you have a question about using Jekyll, start a discussion on the [Jekyll Forum](https://talk.jekyllrb.com/) or [StackOverflow](https://stackoverflow.com/questions/tagged/jekyll). Other resources:
+```
+bundle exec jekyll build
+```
 
-- [Ruby 101](https://jekyllrb.com/docs/ruby-101/)
-- [Setting up a Jekyll site with GitHub Pages](https://jekyllrb.com/docs/github-pages/)
-- [Configuring GitHub Metadata](https://github.com/jekyll/github-metadata/blob/master/docs/configuration.md#configuration) to work properly when developing locally and avoid `No GitHub API authentication could be found. Some fields may be missing or have incorrect data.` warnings.
+## Webrick Not Found
+
+If you have any issues with Jekyll reporting that it can't find "webrick", this is a known issue with Jekyll and may be solved with the following command:
+
+```
+bundle add webrick
+```
+
+# Configuration
+
+For details on how to configure Minimal Mistakes, [the docs may be helpful](https://mmistakes.github.io/minimal-mistakes/docs/configuration/).

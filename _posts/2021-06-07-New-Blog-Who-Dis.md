@@ -1,8 +1,10 @@
 ---
 title: "New Blog Who Dis"
-date: 2021-06-07T15:15:00-08:00
+date: 2021-06-07T15:15:00-07:00
 categories:
   - blog
+tags:
+  - update
 ---
 
 I'd like to welcome you to my blog!!
