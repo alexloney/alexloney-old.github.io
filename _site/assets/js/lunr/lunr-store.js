@@ -4,10 +4,4 @@ var store = [{
         "tags": ["update"],
         "url": "/blog/new-blog-who-dis/",
         "teaser": null
-      },{
-        "title": "HTB: Cap Walkthrough",
-        "excerpt":"There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!! Enumeration I began searching this box with a standard nmap scan: $ sudo nmap -sC -sV -oA nmap/cap 10.129.121.64 Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-06 21:26 EDT...","categories": ["blog","walkthrough","htb"],
-        "tags": ["htb","htb easy","offsec"],
-        "url": "/blog/walkthrough/htb/htb-cap/",
-        "teaser": null
       }]
