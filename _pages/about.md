@@ -3,6 +3,16 @@ permalink: /about/
 title: "About"
 ---
 
-Tempor velit sint sunt ipsum tempor enim ad qui ullamco. Est dolore anim ad velit duis dolore minim sunt aliquip amet commodo labore. Ut eu pariatur aute ea aute excepteur laborum. Esse ea esse excepteur minim mollit qui cillum excepteur ex dolore magna. Labore deserunt fugiat incididunt incididunt sint ea. Consequat dolore aute laboris quis proident quis non et est consectetur ex eiusmod sit culpa.
+Hello! Thanks for coming by my little corner of the internet!
 
-Cupidatat ea do et in excepteur in. Ad nostrud ut est esse eu duis ea sunt eiusmod. Aliquip tempor veniam sint elit fugiat. Velit incididunt laboris amet incididunt labore dolore irure velit excepteur commodo deserunt laborum. Consectetur eu fugiat veniam veniam Lorem labore magna eiusmod. Ea occaecat reprehenderit pariatur consectetur minim labore ut aliquip.
+I have a passion for computer programming, cyber security, mathematics, and pasta! This website will be an ongoing posting dedicated to most of those things, or anything else I feel like posting. Feel free to take a browse around!
+
+I first started programming in around 2002 or so. I started with C++ and PHP. I quickly became interested in online hacking challenges like hackthissite.org and hellboundhacker.org. I became very passionate about computers, programming, algorithms, and security. That passion remained as I went to college.
+
+In college, I dual-majored in Computer Science and Mathematics, participating in the Mathematics club and becoming president of the Computer Science club. I also participated in multiple programming competitions, typically placing within the top 5 (and winning 1st at most local competitions).
+
+After completing my bachelors, I continued and received my Masters in Computer Science.
+
+In addition to the computing world and cyber security, I also have interests in areas such as cooking/baking, drone flying, and shibari. It's very possible and likely that I will make posts about all of these topics over time!
+
+If you would like to reach out to me, feel free to send me an email!
