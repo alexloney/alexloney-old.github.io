@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-13T18:29:35-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-07T18:46:00-07:00</published><updated>2021-06-07T18:46:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-13T18:34:17-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-07T18:46:00-07:00</published><updated>2021-06-07T18:46:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -41,7 +41,7 @@ Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span cl
 &lt;p&gt;This &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sator.php&lt;/code&gt; script is printing the following:&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;[+] Grabbing users from text file
+  &lt;p&gt;[+] Grabbing users from text file&lt;br /&gt;
 [] Database updated&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -149,8 +149,8 @@ www-data@tenet:/var/www/html&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
 &lt;p&gt;Now we need to enumerate and determine exactly what we can do. For this I ran &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;linpeas.sh&lt;/code&gt; to locate anything useful, which found the MySQL login information&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Mysql Database: wordpress
-Mysql User: neil
+  &lt;p&gt;Mysql Database: wordpress&lt;br /&gt;
+Mysql User: neil&lt;br /&gt;
 Mysql Pass: Opera2112&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -172,6 +172,6 @@ Mysql Pass: Opera2112&lt;/p&gt;
 
 &lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
 
-&lt;p&gt;This blog is going to serve as my online researce for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
+&lt;p&gt;This blog is going to serve as my online resource for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
 
 &lt;p&gt;Stay tuned for more post coming soon!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="update" /><summary type="html">I’d like to welcome you to my blog!!</summary></entry></feed>
