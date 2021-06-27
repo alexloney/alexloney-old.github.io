@@ -5,6 +5,12 @@ var store = [{
         "url": "/blog/new-blog-who-dis/",
         "teaser": null
       },{
+        "title": "HTB: Spectra Writeup",
+        "excerpt":"There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!! Enumeration I began this box with a standard nmap scan: $ nmap -sC -sV -oA nmap/spectra 10.10.10.229 Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-08 13:01 EDT Nmap scan...","categories": ["blog","writeup","htb"],
+        "tags": ["htb","htb easy","offsec"],
+        "url": "/blog/writeup/htb/htb-spectra/",
+        "teaser": null
+      },{
         "title": "HTB: Tenet Writeup",
         "excerpt":"There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!! Enumeration Beginning this box as every box, with a nmap scan of the box to locate open ports. $ sudo nmap -sC -sV -oA nmap/tenet 10.10.10.223 Starting Nmap 7.91...","categories": ["blog","writeup","htb"],
         "tags": ["htb","htb medium","offsec"],
