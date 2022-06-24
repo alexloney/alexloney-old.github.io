@@ -52,10 +52,4 @@ var store = [{
         "tags": ["htb","htb medium","offsec"],
         "url": "/blog/writeup/htb/htb-dynstr/",
         "teaser": null
-      },{
-        "title": "HTB: Trick Writeup",
-        "excerpt":"There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!! This box was listed as “easy” however I had more trouble with it than other easy boxes I’ve done. Enumeration I began as always with an nmap port scan...","categories": ["blog","writeup","htb"],
-        "tags": ["htb","htb easy","offsec"],
-        "url": "/blog/writeup/htb/htb-trick/",
-        "teaser": null
       }]
