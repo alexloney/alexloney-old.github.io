@@ -52,4 +52,10 @@ var store = [{
         "tags": ["htb","htb medium","offsec"],
         "url": "/blog/writeup/htb/htb-dynstr/",
         "teaser": null
+      },{
+        "title": "HTB: Networked Writeup",
+        "excerpt":"There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!! Enumeration This began with an nmap scan $ nmap -sC -sV 10.10.10.146 Starting Nmap 7.92 ( https://nmap.org ) at 2022-06-30 14:50 EDT Nmap scan report for 10.10.10.146 Host is...","categories": ["blog","writeup","htb"],
+        "tags": ["htb","htb easy","offsec"],
+        "url": "/blog/writeup/htb/htb-networked/",
+        "teaser": null
       }]

